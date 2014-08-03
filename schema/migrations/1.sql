@@ -6,3 +6,5 @@ CREATE TABLE users (
     creation_time BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE users ADD UNIQUE INDEX email (email);
