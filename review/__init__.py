@@ -3,5 +3,5 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:tiger@localhost/review'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+oursql://root@localhost/review'
 db = SQLAlchemy(app)
