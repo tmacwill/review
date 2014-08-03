@@ -7,7 +7,7 @@ def get(options={}, one=False):
         where_str = "WHERE "
 
         # include n-1 ANDs (e.g. a=? AND b=? AND c=?)
-        where_str += "=? AND ".join(options.keys()) + "=?"
+        where_str += "=%s AND ".join(options.keys()) + "=%s"
 
         # create args array
         args = list(options.values())
