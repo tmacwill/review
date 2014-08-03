@@ -1,5 +1,8 @@
-CREATE TABLE reviews (
+CREATE TABLE submissions (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id BIGINT UNSIGNED NOT NULL,
     creation_time BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE submissions ADD INDEX user_id (user_id);
