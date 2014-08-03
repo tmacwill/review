@@ -1,0 +1,6 @@
+flask
+flask-assets
+flask-cache
+flask-sqlalchemy
+python3-memcached
+sqlalchemy
