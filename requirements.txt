@@ -1,6 +1,5 @@
 flask
 flask-assets
-flask-cache
 flask-sqlalchemy
 pylint
 pymysql
