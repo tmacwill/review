@@ -1,4 +1,5 @@
 import pymysql
+import time
 from flask import g
 
 DATABASE = 'review'
@@ -6,7 +7,7 @@ USER = 'root'
 
 def connect_db():
     """Connects to the specific database."""
-    conn = pymysql.connect(database=DATABASE, user=USER)
+    conn = pymysql.connect(database=DATABASE, user=USER, autocommit=True)
     return conn
 
 """
@@ -26,9 +27,20 @@ def close_db(error):
     if hasattr(g, 'pymysql'):
         g.pymysql.close()
 
-def query_db(query, args=(), one=False):
-    """Queries the database and returns a list of dictionaries."""
+def query(sql, args=()):
+    """Queries the database and returns cursor"""
     cur = get_db().cursor(pymysql.cursors.DictCursor)
-    cur.execute(query, args)
+    cur.execute(sql, args)
+    return cur
+
+def get(sql, args=(), one=False):
+    """Queries the database and returns a list of dictionaries."""
+    cur = query(sql, args)
     res = cur.fetchall()
     return (res[0] if res else None) if one else res
+
+"""
+Returns the current time in ms since the epoch
+"""
+def get_current_time():
+    return int(time.time() * 1000)
