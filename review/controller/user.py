@@ -1,7 +1,7 @@
-import review.model.user
 from review import app, db
 from flask import render_template, request, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
+import review.model.user
 
 # register user
 @app.route('/register', methods=['GET', 'POST'])
@@ -42,7 +42,8 @@ def login():
             return render_template("error.html", error="Please enter an email address and password.")
 
         # else, look for email in db
-        user = review.model.user.get({"email": request.form["email"]}, one=True)
+        user = review.model.user.get_by_email(request.form['email'])
+
         # if no user found, fail
         if user is None:
             # escaping is done in template

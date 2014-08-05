@@ -7,4 +7,4 @@ CREATE TABLE upload_files (
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE uploads ADD INDEX upload_id (upload_id);
+ALTER TABLE upload_files ADD INDEX upload_id (upload_id);

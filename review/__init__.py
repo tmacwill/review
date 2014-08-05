@@ -1,6 +1,5 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-import review.db
 
 app = Flask(__name__)
 
@@ -8,4 +7,4 @@ app = Flask(__name__)
 app.secret_key = b'R\xdaF[f\xed\xc9\xd5\x81P\xec\xdb4G\xb8\xc6\xecj%\x13\x00\x1a\x08c'
 
 import review.controller.user
-
+import review.controller.upload
