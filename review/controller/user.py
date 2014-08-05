@@ -17,7 +17,7 @@ def register():
             return render_template("error.html", error="Passwords must match.")
 
         # else, look for email in db
-        user = review.model.user.get({"email": request.form["email"]}, one=True)
+        user = review.model.user.get_by_email(request.form["email"])
 
         # if user is found, fail
         if user is not None:

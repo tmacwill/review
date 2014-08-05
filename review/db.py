@@ -50,7 +50,7 @@ def get_where(table, options={}, one=False):
     else:
         where_str = ""
 
-    cur = query("SELECT * FROM %s %s" % (table, where_str), args, one=one)
+    cur = query("SELECT * FROM %s %s" % (table, where_str), args)
     res = cur.fetchall()
     return (res[0] if res else None) if one else res
 
