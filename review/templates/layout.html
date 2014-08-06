@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{% block title %}Review{% endblock %}</title>
+
+        {% assets "css/lib" %}
+            <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+        {% endassets %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+
+        {% assets "js/lib" %}
+            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+    </body>
+</html>

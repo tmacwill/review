@@ -1,8 +1,12 @@
-{%if user:%}
+{% extends "layout.html" %}
+{% block body %}
+
+{% if user: %}
     The logged in user is {{user}}.
     <a href="logout">Log Out</a>
-{%else:%}
+{% else: %}
     <a href="login">Log In</a>
     <a href="register">Register</a>
-{%endif%}
+{% endif %}
 
+{% endblock %}
