@@ -12,4 +12,3 @@ def generate_slug(length=32):
 def now():
     """ Get the current time. """
     return int(time.time() * 1000)
-

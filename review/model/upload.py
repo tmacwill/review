@@ -1,5 +1,6 @@
-import review.db
-import review.util
+import review.cache, review.db, review.util
+import pygments, pygments.lexers, pygments.formatters
+import uuid
 
 def create(user_id, name, files):
     """ Upload a set of files from a user. """
@@ -19,10 +20,16 @@ def create(user_id, name, files):
             (upload_id, filename, contents)
         VALUES
             %s
-    """ % ','.join([review.db.values([upload_id, e['filename'], e['contents']]) for e in files])
+        """ % ','.join([review.db.values([upload_id, e['filename'], e['contents']]) for e in files])
     review.db.query(sql)
 
     return upload_id
+
+def highlight(text: str, filename: str) -> str:
+    """ Syntax highlights text (from provided filename). Returns HTML as a string """
+    lexer = pygments.lexers.guess_lexer_for_filename(filename, text)
+    formatter = pygments.formatters.HtmlFormatter(linenos="table", full=True, linespans="line")
+    return pygments.highlight(text, lexer, formatter)
 
 def get_all_by_user_id(user_id, num=None, offset=None):
     """ Get uploads for a given user. """
@@ -36,7 +43,13 @@ def upload_for_slug(slug):
     else:
         return res["id"]
 
+@review.cache.cached()
 def files_for_upload(upload_id):
     """ Get file info for an upload. """
-    return review.db.get_where('upload_files', {"upload_id": upload_id})
+    res = review.db.get_where('upload_files', {"upload_id": upload_id})
 
+    # highlight before sending
+    for f in res:
+        f["contents"] = highlight(f["contents"], f["filename"])
+
+    return res

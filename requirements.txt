@@ -1,6 +1,7 @@
 flask
 flask-assets
 flask-sqlalchemy
+pygments
 pylint
 pymysql
 python3-memcached

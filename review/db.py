@@ -25,10 +25,13 @@ def close_db(error):
     if hasattr(g, 'pymysql'):
         g.pymysql.close()
 
-def query(sql, args=()):
+def query(sql, args=None):
     """Queries the database and returns cursor"""
     cur = _get_db().cursor(pymysql.cursors.DictCursor)
-    cur.execute(sql, args)
+    if args is not None:
+        cur.execute(sql, args)
+    else:
+        cur.execute(sql)
     return cur
 
 def get(sql, args=(), one=False):
