@@ -16,10 +16,10 @@ def create(user_id, name, files):
 
     sql = """
         INSERT INTO upload_files
-            (upload_id, filename, contents, creation_time)
+            (upload_id, filename, contents)
         VALUES
             %s
-    """ % ','.join([review.db.values([upload_id, e['filename'], e['contents'], review.db.now()]) for e in files])
+    """ % ','.join([review.db.values([upload_id, e['filename'], e['contents']]) for e in files])
     review.db.query(sql)
 
     return upload_id
