@@ -1,5 +1,5 @@
-import review.db, review.util
-import uuid
+import review.db
+import review.util
 
 def create(user_id, name, files):
     """ Upload a set of files from a user. """
@@ -11,7 +11,7 @@ def create(user_id, name, files):
             (%s, %s, %s, %s)
     """
     slug = review.util.generate_slug()
-    result = review.db.query(sql, (user_id, name, slug, review.db.now()))
+    result = review.db.query(sql, (user_id, name, slug, review.util.now()))
     upload_id = result.lastrowid
 
     sql = """

@@ -61,10 +61,6 @@ def get_where(table, options={}, one=False):
         return []
     return res[0] if one else res
 
-def now():
-    """ Get the current time. """
-    return int(time.time() * 1000)
-
 def escape(sql):
     """ Escape a SQL string. """
     return _get_db().escape(str(sql))

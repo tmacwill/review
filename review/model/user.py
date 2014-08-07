@@ -1,4 +1,5 @@
 import review.db
+import review.util
 from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -15,7 +16,7 @@ def add(name, email, password):
         VALUES
             (%s, %s, %s, %s, %s)
     """
-    res = review.db.query(sql, [name, email, generate_password_hash(password), _generate_api_key(), review.db.now()])
+    res = review.db.query(sql, [name, email, generate_password_hash(password), _generate_api_key(), review.util.now()])
     return res.lastrowid
 
 def get_by_email(email):
