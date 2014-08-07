@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div>
+{% for file in files %}
+    <div>
+        <h3>{{file["filename"]}}</h2>
+        <pre>
+            {{file["contents"]}}
+        </pre>
+    </div>
+{% endfor %}
+</div>
+
+{% endblock %}
+
+
+

@@ -1,4 +1,5 @@
 import review.db
+from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
 
 def _generate_api_key():
@@ -19,3 +20,6 @@ def add(name, email, password):
 
 def get_by_email(email):
     return review.db.get_where('users', {"email": email}, one=True)
+
+def current_user():
+    return session.get("user_id", None)

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<ul>
+{% for upload in uploads %}
+<li>
+<a href="/view/{{upload["slug"]}}">{{upload["name"]}}</a>
+</li>
+{% else %}
+<li><em> No Uploads Found! </em></li>
+{% endfor %}
+</ul>
+
+{% endblock %}
+
+

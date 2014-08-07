@@ -35,7 +35,10 @@ def get(sql, args=(), one=False):
     """Queries the database and returns a list of dictionaries."""
     cur = query(sql, args)
     res = cur.fetchall()
-    return (res[0] if res else None) if one else res
+    # split so that falsy values become empty list
+    if not res:
+        return []
+    return res[0] if one else res
 
 def get_where(table, options={}, one=False):
     args = []
@@ -52,7 +55,11 @@ def get_where(table, options={}, one=False):
 
     cur = query("SELECT * FROM %s %s" % (table, where_str), args)
     res = cur.fetchall()
-    return (res[0] if res else None) if one else res
+
+    # split so that falsy values become empty list
+    if not res:
+        return []
+    return res[0] if one else res
 
 def now():
     """ Get the current time. """
