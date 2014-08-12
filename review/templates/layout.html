@@ -8,10 +8,10 @@
         {% endassets %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-
         {% assets "js/lib" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
+
+        {% block body %}{% endblock %}
     </body>
 </html>

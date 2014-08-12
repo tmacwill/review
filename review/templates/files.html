@@ -1,16 +1,26 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<div>
-{% for file in files %}
-    <div>
-        <h3>{{file["filename"]}}</h2>
-        {{file["contents"]|safe}}
-    </div>
-{% endfor %}
+{% assets "css/view" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+{% endassets %}
+
+<div class="container">
+    <h2>pset1 by Tommy MacWilliam</h2>
+    <div id="test"></div>
+    {% for file in files %}
+        <div class="file">
+            <h3>
+                {{ file["filename"] }}
+                <span class="file-info">167 LINES &nbsp;&bull;&nbsp; 5 COMMENTS</span>
+            </h3>
+            {{ file["contents"] | safe }}
+        </div>
+    {% endfor %}
 </div>
 
+{% assets "js/view" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 {% endblock %}
-
-
-
