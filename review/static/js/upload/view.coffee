@@ -20,14 +20,35 @@ CommentBox = React.createClass
     render: ->
         h.div({className: 'comment-box'},
             h.h3({className: 'author'}, this.props.author)
-            h.h4({className: 'timestamp'}, this.props.timestamp)
-            h.div({className: 'comment'}, this.props.comment)
+            h.div({className: 'comment', contentEditable: 'true'}, this.props.comment)
         )
 
 $ ->
-    React.renderComponent(
-        CommentBox({
-            author: 'Tommy MacWilliam'
-            timestamp: '3 hours ago'
-            comment: 'this looks okay, but have you considered using a pre-processor macro here?'
-        }), $('#test')[0])
+    $commentsContainer = $('#comments-container')
+
+    $('.linenodiv').each(->
+        $(this).on('click', 'a', (e) ->
+            # get the position of the line we're commenting on
+            $this = $(this)
+            top = $this.offset().top
+            id = $this.parents('[data-file-id]').attr('data-file-id')
+
+            # add a new container for the comment box
+            $div = $('<div>')
+            $commentsContainer.append($div)
+            $div.offset({top: top})
+
+            # render a comment box in the container
+            React.renderComponent(
+                CommentBox({
+                    author: 'Tommy MacWilliam'
+                    comment: ''
+                }),
+                $div[0]
+            )
+
+            $div.find('[contenteditable]').focus()
+
+            return false
+        )
+    )

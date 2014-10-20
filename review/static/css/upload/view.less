@@ -1,5 +1,5 @@
 html, body, td.linenos {
-    background: #fafafa !important;
+    background: #f6f6f6 !important;
 }
 
 .file {
@@ -37,6 +37,10 @@ html, body, td.linenos {
 
     .linenodiv {
         border-right: 1px solid #ccc;
+        padding-bottom: 1px;
+        background: white;
+        text-align: right;
+        min-width: 40px;
 
         a {
             text-decoration: none;
@@ -60,26 +64,28 @@ html, body, td.linenos {
 
 .comment-box {
     border: 1px solid #ccc;
-    padding: 10px 15px;
+    padding: 7px 10px;
     background: #ffffd7;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    position: absolute;
 
     h3, h4 {
         display: inline-block;
         padding: 0;
         margin: 0;
+        background: none;
+        border-bottom: none;
     }
 
     h3 {
-        font-size: 16px;
-        margin-right: 10px;
-    }
-
-    h4 {
         font-size: 14px;
-        font-weight: normal;
     }
 
     .comment {
-        margin-top: 5px;
+        font-size: 13px;
+        margin-top: 3px;
+        max-height: 100px;
+        overflow: auto;
+        outline: 0px solid transparent;
     }
 }
