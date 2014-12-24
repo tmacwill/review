@@ -32,7 +32,17 @@
                 var poly = this;
                 this.$.fileform.addEventListener('submitting', function(event){
                     // update to have all files added so far
-                    event.detail.formData = poly.files;
+                    event.detail.formData['f'] = poly.files;
+                });
+                this.$.fileform.addEventListener('submitted', function(event){
+                    if (event.detail.status == 200) {
+                        // TODO: this whole block needs error handling
+                        var resp = JSON.parse(event.detail.response);
+                        if (resp.success) {
+                            var url = "view/" + resp.id;
+                            window.location.href = url;
+                        }
+                    }
                 });
                 this.$.addfile.addEventListener('change',function(event) {
                     // add files to files array

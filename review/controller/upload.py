@@ -25,12 +25,12 @@ def upload():
 
 @app.route('/view/<slug>')
 def view(slug):
-    upload_id = review.model.upload.upload_for_slug(slug)
-    if upload_id is None:
+    upload = review.model.upload.upload_for_slug(slug)
+    if upload is None:
         return render_template("error.html", error="Invalid Url")
 
-    files = review.model.upload.files_for_upload(upload_id)
-    return render_template("view.html", files=simplejson.dumps(files))
+    files = review.model.upload.files_for_upload(upload["id"])
+    return render_template("view.html", name=upload["name"], files=simplejson.dumps(files))
 
 @app.route('/uploads', methods=['GET'])
 def uploads():

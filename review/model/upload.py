@@ -41,7 +41,7 @@ def upload_for_slug(slug: str) -> int:
     if len(res) == 0:
         return None
     else:
-        return res["id"]
+        return res
 
 @review.cache.cached()
 def files_for_upload(upload_id: int) -> list:
