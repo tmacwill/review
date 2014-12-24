@@ -1,11 +1,20 @@
 {% extends "layout.html" %}
 {% block body %}
 <link rel="import" href="static/components/lib/polymer/polymer.html">
+<link rel="import" href="static/components/lib/paper-input/paper-input.html">
+<link rel="import" href="static/components/lib/paper-button/paper-button.html">
 
-<form action="/login" method="POST">
-    <label for="email">Email</label><input id="email" type="email" name="email" />
-    <label for="password">Password</label><input id="password" type="password" name="password" />
-    <input type="submit" />
+<form action="/login" method="POST" id="login-form">
+    <paper-input-decorator floatingLabel label="Email">
+        <input floatinglabel id="email" type="email" name="email"/>
+    </paper-input-decorator>
+    <br>
+    <paper-input-decorator floatingLabel label="Password">
+        <input id="password" type="password" name="password"/>
+    </paper-input-decorator>
+    <br>
+    <paper-button role="button" onclick="document.getElementById('login-form').submit()">Submit</paper-button>
+    <paper-button role="button" onclick="document.getElementById('login-form').reset()">Clear</paper-button>
 </form>
 
 {% endblock %}
