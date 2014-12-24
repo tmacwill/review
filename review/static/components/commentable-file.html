@@ -1,0 +1,88 @@
+<link rel="import" href="/static/components/lib/polymer/polymer.html">
+
+<polymer-element name="commentable-file" attributes="fileId filename lines comments contents">
+    <template>
+        <style>
+            .file {
+                background: white;
+                margin-bottom: 20px;
+            }
+
+            h3 {
+                padding: 0;
+                margin: 0;
+                padding: 11px 0 11px 15px;
+                border: 1px solid #ccc;
+                font-size: 20px;
+            }
+
+            h3 .file-info {
+                font-weight: normal;
+                color: #666;
+                font-size: 14px;
+                display: inline-block;
+                margin-left: 7px;
+            }
+
+            pre {
+                border: none;
+            }
+
+            pre > span {
+                display: block;
+                width: 100%;
+            }
+
+            .linenodiv {
+                border-right: 1px solid #ccc;
+                background: white;
+                text-align: right;
+                min-width: 40px;
+                padding-right: 7px;
+            }
+
+            .linenodiv a {
+                text-decoration: none;
+                color: #666;
+            }
+
+            .linenodiv a:hover {
+                color: #ccc;
+            }
+
+            .highlight pre {
+                padding-left: 10px;
+            }
+
+            table {
+                width: 100%;
+                border-top: 3px solid #e5e5e5;
+                border-left: 1px solid #ccc;
+                border-bottom: 1px solid #ccc;
+                border-right: 1px solid #ccc;
+            }
+
+            table tr td:first-child {
+                width: 1%;
+                white-space: nowrap;
+            }
+        </style>
+
+        <div class="file">
+            <h3>
+                {{filename}}
+                <span class="file-info">{{lines}} LINES &nbsp;&bull;&nbsp; {{comments}} COMMENTS</span>
+            </h3>
+            <div id="contents"></div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            ready: function() {
+                // HTML has already been escaped server-side, so insert it raw here
+                this.injectBoundHTML(this.contents, this.$.contents);
+            }
+        });
+    </script>
+</polymer-element>

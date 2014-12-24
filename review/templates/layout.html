@@ -2,12 +2,23 @@
 <html>
     <head>
         <title>{% block title %}Review{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+        <link rel="import" href="/static/components/lib/font-roboto/roboto.html" />
+        <style>
+            html, body {
+                height: 100%;
+                margin: 0;
+                background-color: #e5e5e5;
+                font-family: 'HelveticaNeue', 'Helvetica', 'Verdana', 'Arial', sans-serif;
+            }
 
-        {% assets "css/lib" %}
-            <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
-        {% endassets %}
+            body {
+                padding: 0 20px;
+            }
+        </style>
+
     </head>
-    <body>
+    <body unresolved>
         {% assets "js/lib" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}

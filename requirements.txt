@@ -5,4 +5,5 @@ pygments
 pylint
 pymysql
 python3-memcached
+simplejson
 sqlalchemy

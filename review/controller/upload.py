@@ -1,8 +1,10 @@
-from review import app, db
-import review.controller.common
+import simplejson
 from flask import render_template, request, session, redirect, url_for
+
+import review.controller.common
 import review.model.upload
 import review.model.user
+from review import app, db
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -18,7 +20,7 @@ def view(slug):
         return render_template("error.html", error="Invalid Url")
 
     files = review.model.upload.files_for_upload(upload_id)
-    return render_template("files.html", files=files)
+    return render_template("view.html", files=simplejson.dumps(files))
 
 @app.route('/uploads', methods=['GET'])
 def uploads():
