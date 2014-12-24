@@ -23,7 +23,7 @@ def create(user_id: int, name: str, files: list) -> int:
         """ % ','.join([review.db.values([upload_id, e['filename'], e['contents']]) for e in files])
     review.db.query(sql)
 
-    return upload_id
+    return slug
 
 def highlight(text: str, filename: str) -> str:
     """ Syntax highlights text (from provided filename). Returns HTML as a string """

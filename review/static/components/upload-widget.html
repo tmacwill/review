@@ -1,0 +1,39 @@
+<link rel="import" href="/static/components/lib/polymer/polymer.html">
+<link rel="import" href="/static/components/lib/paper-input/paper-input.html">
+<link rel="import" href="/static/components/lib/paper-button/paper-button.html">
+<link rel="import" href="/static/components/lib/ajax-form/ajax-form.html">
+<link rel="import" href="/static/components/lib/file-input/file-input.html">
+
+<polymer-element name="upload-widget" attributes="files">
+    <template>
+        <form id="fileform" is="ajax-form" action="../../upload" method="post" enctype="multipart/form-data">
+        <paper-input-decorator floatinglabel label="Upload Name">
+            <input type="text" name="name"/>
+            <div class="files">
+                <template repeat="{{file in files}}">
+                    <h2>{{file.name}}</h2>
+                </template>
+            </div>
+        </paper-input-decorator>
+        <file-input required id="addfile" name="f">Add File(s)</file-input>
+        <input type="submit" />
+        </form>
+    </template>
+
+    <script>
+        Polymer({
+            files: [],
+            ready: function() {
+                var poly = this;
+                this.$.fileform.addEventListener('submitting', function(event){
+                    console.log('hi');
+                });
+                this.$.addfile.addEventListener('change',function(event) {
+                    for (i in event.detail.valid) {
+                        poly.files.push(event.detail.valid[i]);
+                    }
+                });
+            }
+        });
+    </script>
+</polymer-element>
