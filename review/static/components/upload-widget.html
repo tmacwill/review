@@ -9,6 +9,7 @@
         <form id="fileform" is="ajax-form" action="../../upload" method="post" enctype="multipart/form-data">
         <paper-input-decorator floatinglabel label="Upload Name">
             <input type="text" name="name"/>
+        </paper-input-decorator>
             <div class="files">
                 <template repeat="{{file, idx in files}}">
                     <span>
