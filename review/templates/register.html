@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 
+<link rel="import" href="static/components/lib/polymer/polymer.html">
 <form action="/register" method="POST">
     <label for="name">Name</label><input id="name" type="text" name="name" />
     <label for="email">Email</label><input id="email" type="email" name="email" />

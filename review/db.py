@@ -40,7 +40,7 @@ def get(sql, args=(), one=False):
     res = cur.fetchall()
     # split so that falsy values become empty list
     if not res:
-        return []
+        return None if one else []
     return res[0] if one else res
 
 def get_where(table, options={}, one=False):
@@ -56,13 +56,11 @@ def get_where(table, options={}, one=False):
     else:
         where_str = ""
 
-    cur = query("SELECT * FROM %s %s" % (table, where_str), args)
-    res = cur.fetchall()
+    query_str = "SELECT * FROM %s %s" % (table, where_str)
+    res = get(query_str, args, one)
 
     # split so that falsy values become empty list
-    if not res:
-        return []
-    return res[0] if one else res
+    return res
 
 def escape(sql):
     """ Escape a SQL string. """

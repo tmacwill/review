@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
 
+ <link rel="import" href="static/components/lib/polymer/polymer.html">
+
 {% if user: %}
     The logged in user is {{user}}.
     <a href="logout">Log Out</a>
@@ -8,5 +10,6 @@
     <a href="login">Log In</a>
     <a href="register">Register</a>
 {% endif %}
+
 
 {% endblock %}
