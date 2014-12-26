@@ -2,8 +2,9 @@ import simplejson
 from flask import render_template, request, session, redirect, url_for
 
 import review.controller.common
+import review.model.comment
+import review.model.file
 import review.model.upload
-import review.model.user
 from review import app, db
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -29,8 +30,11 @@ def view(slug):
     if upload is None:
         return render_template("error.html", error="Invalid Url")
 
-    files = review.model.upload.files_for_upload(upload["id"])
-    return render_template("view.html", name=upload["name"], files=simplejson.dumps(files))
+    # get the files for this upload and the comments associated with those files
+    files = review.model.file.get_for_upload(upload['id'])
+    comments = review.model.comment.get_for_files([e['id'] for e in files])
+
+    return render_template("view.html", name=upload['name'], files=simplejson.dumps(files), comments=simplejson.dumps(comments))
 
 @app.route('/uploads', methods=['GET'])
 def uploads():

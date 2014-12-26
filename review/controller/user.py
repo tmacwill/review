@@ -25,7 +25,7 @@ def register():
             return render_template("error.html", error="Account for %s already exists" % request.form["email"])
 
         # add user to users table, and log in
-        id = review.model.user.add(request.form["name"], request.form["email"], request.form["password"])
+        id = review.model.user.create(request.form["name"], request.form["email"], request.form["password"])
         session["user_id"] = id
 
         return redirect(url_for('home'))

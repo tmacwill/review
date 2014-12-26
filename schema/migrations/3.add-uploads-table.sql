@@ -7,4 +7,5 @@ CREATE TABLE uploads (
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- used to get all the uploads by a user
 ALTER TABLE uploads ADD INDEX user_id (user_id);

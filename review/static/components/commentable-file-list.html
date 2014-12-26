@@ -1,13 +1,14 @@
 <link rel="import" href="/static/components/lib/polymer/polymer.html">
 <link rel="import" href="/static/components/commentable-file.html">
 
-<polymer-element name="commentable-file-list" attributes="files">
+<polymer-element name="commentable-file-list" attributes="files comments">
     <template>
         <template repeat="{{file in files}}">
             <commentable-file
                 fileId="{{file.id}}"
                 filename="{{file.filename}}"
                 contents="{{file.contents}}"
+                comments="{{groupedComments[file.id]}}"
                 lines="127"
                 comments="5"
             ></commentable-file>
@@ -18,7 +19,9 @@
         Polymer({
             ready: function() {
                 this.files = JSON.parse(this.files);
+                this.comments = JSON.parse(this.comments);
+                this.groupedComments = _.groupBy(this.comments, function(e) { return e.file_id; });
             }
-        })
+        });
     </script>
 </polymer-element>

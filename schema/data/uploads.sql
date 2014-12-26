@@ -4,7 +4,7 @@ VALUES
     (1, 'pset1', '6c67b081ebea4b97b8ab747cfa37eb9', 1407385222975)
 ;
 
-INSERT INTO upload_files
+INSERT INTO files
     (upload_id, filename, contents)
 VALUES
     (1, 'hello.c', "// Tommy MacWilliam, 2009\n\n#include <stdio.h>\n\nint main(int argc, char** argv)\n{\n    printf(\"hello, world!\\n\");\n}"),
