@@ -8,4 +8,5 @@ CREATE TABLE users (
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- used to get the user associated with an email
 ALTER TABLE users ADD UNIQUE INDEX email (email);

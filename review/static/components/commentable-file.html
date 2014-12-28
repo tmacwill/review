@@ -1,8 +1,10 @@
 <link rel="import" href="/static/components/lib/polymer/polymer.html">
+<link rel="import" href="/static/components/comment-box.html">
 
 <polymer-element name="commentable-file" attributes="fileId filename lines comments contents">
     <template>
         <style>
+
             .file {
                 background: white;
                 margin-bottom: 20px;
@@ -46,10 +48,6 @@
                 color: #666;
             }
 
-            .linenodiv a:hover {
-                color: #ccc;
-            }
-
             .highlight pre {
                 padding-left: 10px;
             }
@@ -66,14 +64,26 @@
                 width: 1%;
                 white-space: nowrap;
             }
+
+            .highlight {
+                max-width: 50%;
+                overflow-x: scroll;
+                cursor: pointer;
+            }
+
+            .highlight span:hover {
+                background: rgba(249, 250, 210, 0.8);
+            }
+
         </style>
 
         <div class="file">
             <h3>
                 {{filename}}
-                <span class="file-info">{{lines}} LINES &nbsp;&bull;&nbsp; {{comments}} COMMENTS</span>
+                <span class="file-info">{{lines}} LINES &nbsp;&bull;&nbsp; {{commentBoxes.length}} COMMENTS</span>
             </h3>
-            <div id="contents"></div>
+            <div id="contents" on-click="{{click}}"></div>
+            <div id="comments"></div>
         </div>
     </template>
 
@@ -82,6 +92,88 @@
             ready: function() {
                 // HTML has already been escaped server-side, so insert it raw here
                 this.injectBoundHTML(this.contents, this.$.contents);
+                this.commentBoxes = [];
+            },
+
+            domReady: function() {
+                // display all comments associated with this file
+                for (var i = 0, n = this.comments.length; i < n; i++) {
+                    var comment = this.comments[i];
+                    if (comment.file_id == this.fileId) {
+                        this.addComment(comment.line, comment.contents, comment.id);
+                    }
+                }
+
+                this.layoutComments();
+            },
+
+            addComment: function(line, contents, commentId) {
+                // get location of comment box by getting the offset of its line
+                var $line = this.shadowRoot.querySelector('#line-' + line);
+                var top = this.offsetTop + $line.offsetTop;
+
+                // create comment box
+                var $comment = document.createElement('comment-box');
+                $comment.setAttribute('fileId', this.fileId);
+                $comment.setAttribute('line', line);
+                $comment.setAttribute('author', 'Tommy MacWilliam');
+                $comment.setAttribute('timestamp', '3 days ago');
+                $comment.setAttribute('photo', 'https://pbs.twimg.com/profile_images/378800000821465002/eb68c6d48f3db2c40332c62b134ea9e9_400x400.jpeg');
+                $comment.setAttribute('top', top + 20 + 'px');
+                $comment.setAttribute('left', '52%');
+                $comment.setAttribute('maxWidth', '45%');
+
+                // if we're loading an existing comment, it should have an id and contents
+                if (commentId !== undefined) {
+                    $comment.setAttribute('commentId', commentId);
+                }
+                if (contents !== undefined) {
+                    $comment.setAttribute('contents', contents);
+                }
+
+                // add to the DOM and keep track internall
+                this.$.comments.appendChild($comment);
+                this.commentBoxes.push($comment);
+
+                // focusing immediately causes the viewport to scroll for some reason
+                if (!contents) {
+                    setTimeout(function() {
+                        $comment.focusTextArea();
+                    }, 1);
+                }
+            },
+
+            click: function(e) {
+                // create a comment box on this line
+                var $line = $(e.target).closest('span[id^=line]')[0];
+                if ($line === undefined) {
+                    return;
+                }
+
+                // create a new comment at this line, then re-layout so everything lines up
+                var id = $line.getAttribute('id');
+                this.addComment(id.substring(id.lastIndexOf('-') + 1))
+                this.layoutComments();
+
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            },
+
+            layoutComments: function() {
+                // sort comment boxes by their y-coordinate
+                var sorted = _.sortBy(this.commentBoxes, function(e) { return e.bounds().top; });
+                var padding = 3;
+
+                // for each comment box, if the immediately next box intersects it, then move that box down
+                for (var i = 0, n = sorted.length; i < n - 1; i++) {
+                    var bounds = sorted[i].bounds();
+                    var nextBounds = sorted[i + 1].bounds();
+                    if (nextBounds.top < bounds.top + bounds.height) {
+                        var top = bounds.top + bounds.height + padding;
+                        sorted[i + 1].top = top + 'px';
+                    }
+               }
             }
         });
     </script>
