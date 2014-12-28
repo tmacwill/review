@@ -18,7 +18,7 @@ def upload():
             for f in request.files.getlist(key):
                 files.append({
                     "filename": f.filename,
-                    "contents": f.stream.read()
+                    "contents": f.stream.read().decode()
                 })
 
         id = review.model.upload.create(user_id, request.form.get('name', "Unnamed"), files)
