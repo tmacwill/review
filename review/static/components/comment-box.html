@@ -122,7 +122,7 @@
             onSaveSuccess: function(e) {
                 var response = e.detail.response;
                 if (response.success) {
-                    this.commentId = e.detail.response.comment_id;
+                    this.commentId = response.comment_id;
                 }
             }
         });

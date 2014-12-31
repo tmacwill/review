@@ -1,0 +1,94 @@
+<link rel="import" href="/static/components/lib/polymer/polymer.html">
+
+<polymer-element name="add-comment-icon" attributes="top">
+    <template>
+        <link rel="stylesheet" href="/static/css/font-awesome.min.css" />
+        <style>
+
+            #container {
+                background: white;
+                font-size: 22px;
+                line-height: 22px;
+                padding: 0;
+                margin: 0;
+                cursor: pointer;
+                color: #A31818;
+                position: absolute;
+                left: 62px;
+                transition: transform 0.1s ease-in-out;
+                -webkit-animation-duration: 0.5s;
+                animation-duration: 0.5s;
+                -webkit-animation-fill-mode: both;
+                animation-fill-mode: both;
+                -webkit-animation-timing-function: ease-in-out;
+                animation-timing-function: ease-in-out;
+                animation-iteration-count: 3;
+                -webkit-animation-iteration-count: 3;
+            }
+
+            #container:hover {
+                transform: scale(1.3);
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            @-webkit-keyframes pulse {
+                0% {
+                    -webkit-transform: scale(1);
+                }
+                50% {
+                    -webkit-transform: scale(1.3);
+                }
+                100% {
+                    -webkit-transform: scale(1);
+                }
+            }
+
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.3);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            .pulse {
+                -webkit-animation-name: pulse;
+                animation-name: pulse;
+            }
+
+        </style>
+
+        <div id="container" style="top: {{top}}" class="hidden">
+            <i class="fa fa-plus-square"></i>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            hide: function() {
+                this.$.container.classList.add('hidden');
+            },
+
+            pulse: function() {
+                var self = this;
+                this.$.container.classList.remove('pulse');
+
+                // removing/adding immediately doesn't reset the animation, but this does
+                setTimeout(function() {
+                    self.$.container.classList.add('pulse');
+                }, 1);
+            },
+
+            show: function() {
+                this.$.container.classList.remove('hidden');
+            }
+        });
+    </script>
+</polymer-element>
