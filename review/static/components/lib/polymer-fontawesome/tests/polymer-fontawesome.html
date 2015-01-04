@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>font-awesome tests</title>
+
+  <script src="../../platform/platform.js"></script>
+  <link rel="import" href="../../polymer-test-tools/tools.html">
+  <script src="../../polymer-test-tools/htmltest.js"></script>
+  
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../polymer-fontawesome.html">
+
+</head>
+<body>
+
+  <font-awesome icon="home"></font-awesome>
+
+  <script>
+
+    document.addEventListener('polymer-ready', function() {
+      var myEl = document.querySelector('font-awesome');
+      assert.equal(myEl.icon, 'home');
+    });
+
+  </script>
+
+</body>
+</html>
