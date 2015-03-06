@@ -1,0 +1,29 @@
+.login-box {
+    padding: 20px;
+    margin-top: 70px;
+}
+
+.login-box h1 {
+    padding: 20px;
+    padding-bottom: 0;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.login-box form {
+    padding: 30px;
+}
+
+.login-box input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.login-box .btn-submit {
+    width: 100%;
+    font-size: 24px;
+    font-weight: 200;
+    padding: 5px;
+}

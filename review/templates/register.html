@@ -1,13 +1,22 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<link rel="import" href="static/components/lib/polymer/polymer.html">
-<form action="/register" method="POST">
-    <label for="name">Name</label><input id="name" type="text" name="name" />
-    <label for="email">Email</label><input id="email" type="email" name="email" />
-    <label for="password">Password</label><input id="password" type="password" name="password" />
-    <label for="password2">Confirm Password</label><input type="password" name="password2" id="password2" />
-    <input type="submit" />
-</form>
+<link rel="stylesheet" href="/static/css/login.css" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 content-area content-area-border login-box">
+            <h1>Let's Review.</h1>
+            <form action="/register" method="POST" id="register-form">
+                <input id="name" type="text" name="name" placeholder="Name" />
+                <input id="username" type="text" name="username" placeholder="Username" />
+                <input id="email" type="email" name="email" placeholder="Email" />
+                <input id="password" type="password" name="password" placeholder="Password" />
+                <input id="password2" type="password" name="password2" placeholder="Confirm password" />
+                <a class="btn btn-primary btn-submit" id="btn-register">Register</a>
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

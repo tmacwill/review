@@ -1,0 +1,11 @@
+{% macro comment_box(author, timestamp, contents) %}
+
+<div class="comment-box">
+    <h4><a href="#">{{ author }}</a></h4>
+    <span class="timestamp">{{ timestamp }}</span>
+    <div class="contents">
+        <p>{{ contents }}</p>
+    </div>
+</div>
+
+{% endmacro %}

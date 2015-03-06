@@ -1,0 +1,85 @@
+.upload-header {
+    padding: 20px 30px;
+}
+
+.upload-header h1 {
+    display: inline-block;
+}
+
+.upload-header h3 {
+    color: #167F39;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.upload-header p {
+    margin-top: 15px;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.upload-header .stats-table {
+    font-size: 18px;
+}
+
+.files-container {
+    margin-top: 10px;
+}
+
+.files-container .file {
+    margin-bottom: 10px;
+}
+
+.files-container .file-contents {
+    padding: 20px 30px;
+}
+
+.files-container h3 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 8px;
+}
+
+.files-container .file pre {
+    background: white;
+    border: none;
+    overflow: scroll;
+}
+
+.files-container .file .linenodiv pre {
+    border-right: solid 1px #ccc;
+    border-radius: 0;
+    padding-right: 12px;
+}
+
+.files-container .file .highlight {
+    padding-left: 4px;
+}
+
+.comment-container {
+    position: relative;
+}
+
+.comment-box {
+    background: #F9FAD2;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    font-size: 13px;
+    position: absolute;
+    left: 10px;
+}
+
+.comment-box h4 {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    margin-right: 4px;
+}
+
+.comment-box p {
+    padding: 0;
+    margin: 0;
+}
+
+.comment-box h4, .comment-box .timestamp {
+    display: inline-block;
+}

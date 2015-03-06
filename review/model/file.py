@@ -1,35 +1,22 @@
-import review.cache, review.db, review.util
+import review.cache
+import review.db
 import pygments, pygments.lexers, pygments.formatters
 
-def create(upload_id: int, files: list):
-    """ Store a list of files associatd with an upload. """
+class File(review.db.DBObject):
+    __table__ = 'files'
 
-    # if files isn't given as a list, then make it one
-    if not isinstance(files, list):
-        files = [files]
+    @classmethod
+    def get_highlighted_for_upload(cls, upload_id: str) -> list:
+        """ Get highlighted versions of the files for this upload. """
 
-    sql = """
-        INSERT INTO files
-            (upload_id, filename, contents)
-        VALUES
-            %s
-        """ % ','.join([review.db.values([upload_id, e['filename'], e['contents']]) for e in files])
+        rows = cls.get_where({'upload_id': upload_id})
+        for row in rows.values():
+            row.contents = highlight(row.contents, row.filename)
 
-    review.db.query(sql)
-
-def get_for_upload(upload_id: int) -> list:
-    """ Get file info for an upload. """
-
-    result = review.db.get_where('files', {'upload_id': upload_id})
-
-    # highlight before sending
-    for f in result:
-        f['contents'] = highlight(f['contents'], f['filename'])
-
-    return result
+        return rows
 
 def highlight(text: str, filename: str) -> str:
-    """ Syntax highlights text (from provided filename). Returns HTML as a string """
+    """ Syntax highlights text (from provided filename). Returns HTML as a string. """
 
     lexer = pygments.lexers.guess_lexer_for_filename(filename, text)
     formatter = pygments.formatters.HtmlFormatter(linenos="table", linespans="line", anchorlinenos=True, lineanchors=filename)

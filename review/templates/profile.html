@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<link rel="stylesheet" href="/static/css/profile.css" />
+
+<div class="container-fluid user-profile-page">
+    <div class="row">
+        <div class="profile-box col-md-3 content-area content-area-border">
+            <div class="profile-header">
+                <img class="profile-photo" src="{{user.photo_url}}" alt="{{user.name}}" />
+                <h2>{{user.name}}</h2>
+                <hr />
+            </div>
+            <div class="stats-container">
+                <table class="stats">
+                    <tbody>
+                        <tr>
+                            <td>Reviews</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>Comments</td>
+                            <td>18</td>
+                        </tr>
+                        <tr>
+                            <td>Requests</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td>Files</td>
+                            <td>23</td>
+                        </tr>
+                        <tr>
+                            <td>Lines</td>
+                            <td>1976</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="user-stream col-md-9">
+            <div class="btn-group btn-group-justified tabs">
+                <a class="tab btn btn-default selected" href="#">
+                    <h3>Reviews</h3>
+                </a>
+                <a class="tab btn btn-default" href="#">
+                    <h3>Requests</h3>
+                </a>
+            </div>
+            <div class="row stories content-area">
+                <div class="story review-story">
+                    <div class="story-header">
+                        <a href="#"><h4>CS50 mario.c</h4></a>
+                        <a href="#" class="upload-tag btn btn-primary">CS50</a>
+                        <a href="#" class="upload-tag btn btn-primary">pset1</a>
+                        <a href="#" class="upload-tag btn btn-primary">mario</a>
+                    </div>
+                    <div class="story-details">
+                        <div class="upload-description">This is my submission for CS50's first problem set. It has a few bugs, but it passes most test cases. When you input negative numbers, though, it crashes :( Anyone know why?</div>
+                        <div class="story-stats">Uploaded by Tommy MacWilliam. 0 Reviews. 5 Files. 432 Lines.</div>
+                    </div>
+                </div>
+                <div class="story review-story">
+                    <div class="story-header">
+                        <a href="#"><h4>CS50 mario.c</h4></a>
+                        <a href="#" class="upload-tag btn btn-primary">CS50</a>
+                        <a href="#" class="upload-tag btn btn-primary">pset1</a>
+                        <a href="#" class="upload-tag btn btn-primary">mario</a>
+                    </div>
+                    <div class="story-details">
+                        <div class="upload-description">This is my submission for CS50's first problem set. It has a few bugs, but it passes most test cases. When you input negative numbers, though, it crashes :( Anyone know why?</div>
+                        <div class="story-stats">Uploaded by Tommy MacWilliam. 0 Reviews. 5 Files. 432 Lines.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

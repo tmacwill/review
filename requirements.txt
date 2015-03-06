@@ -1,9 +1,9 @@
 flask
 flask-assets
-flask-sqlalchemy
+nose
 pygments
 pylint
 pymysql
 python3-memcached
+redis
 simplejson
-sqlalchemy

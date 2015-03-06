@@ -3,12 +3,10 @@
     <head>
         <title>{% block title %}Review{% endblock %}</title>
         <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-        <link rel="import" href="/static/components/lib/font-roboto/roboto.html" />
-        <link rel="stylesheet" href="/static/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="/static/css/lib/bootstrap.min.css" />
         <link rel="stylesheet" href="/static/css/global.css" />
-
     </head>
-    <body unresolved>
+    <body>
         {% assets "js/lib" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
