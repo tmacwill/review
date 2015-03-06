@@ -1,5 +1,5 @@
 import sys
-from review import app
+from r import app
 
 host = '0.0.0.0'
 if len(sys.argv) > 1:
