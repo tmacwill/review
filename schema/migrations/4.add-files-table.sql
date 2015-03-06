@@ -1,8 +1,9 @@
 CREATE TABLE files (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    upload_id BIGINT UNSIGNED NOT NULL,
+    id CHAR(64) NOT NULL,
+    upload_id CHAR(64) NOT NULL,
     filename VARCHAR(255) NOT NULL,
     contents MEDIUMTEXT,
+    creation_time BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

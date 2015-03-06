@@ -1,9 +1,10 @@
 CREATE TABLE comments (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_id BIGINT UNSIGNED NOT NULL,
-    file_id BIGINT UNSIGNED NOT NULL,
+    id CHAR(64) NOT NULL,
+    user_id CHAR(64) NOT NULL,
+    file_id CHAR(64) NOT NULL,
     line MEDIUMINT UNSIGNED NOT NULL,
-    contents MEDIUMTEXT,
+    contents TEXT,
+    creation_time BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -11,4 +12,4 @@ CREATE TABLE comments (
 ALTER TABLE comments ADD INDEX file_id (file_id);
 
 -- used to get all of the comments by a user
-ALTER TABLE comments ADD INDEX user_id (user_id);
+ALTER TABLE comments ADD INDEX user_id (user_id, creation_time);
