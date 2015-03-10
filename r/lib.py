@@ -14,6 +14,7 @@ def now():
 
 def to_json(obj):
     """ Serialize an object to JSON. """
+
     def encode(obj):
         if hasattr(obj, '__to_json__'):
             return obj.__to_json__()

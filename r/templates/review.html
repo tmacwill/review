@@ -3,7 +3,10 @@
 {% block body %}
 
 <link rel="stylesheet" href="/static/css/review.css" />
-<script type="text/javascript" src="/static/js/review.js"></script>
+
+{% assets "js/review" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 
 <div class="container-fluid">
     <div class="row">
