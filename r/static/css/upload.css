@@ -1,0 +1,97 @@
+.upload-box {
+    padding: 20px;
+    margin-top: 70px;
+}
+
+.upload-box h1 {
+    padding: 20px;
+    padding-bottom: 0;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.upload-box form {
+    padding: 30px;
+}
+
+.upload-box textarea {
+    border: 1px solid #ccc;
+    resize: none;
+    width: 100%;
+    display: block;
+    margin-bottom: 15px;
+    height: 80px;
+    padding: 10px;
+}
+
+.upload-box input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.upload-box .btn-submit {
+    width: 100%;
+    font-size: 24px;
+    font-weight: 200;
+    padding: 5px;
+}
+
+.upload-box .files-container {
+    border: 1px dashed #337ab7;
+    padding: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.upload-box .btn-add-file {
+    margin-top: 20px;
+}
+
+.upload-box .input-file {
+    display: none;
+}
+
+.upload-box .files-list {
+    margin-top: 15px;
+    border-bottom: solid 1px #ccc;
+}
+
+.upload-box .file-row {
+    border-top: solid 1px #ccc;
+    background: #f5f5f5;
+    padding: 10px;
+    text-align: left;
+}
+
+.upload-box .file-row .file-name, .upload-box .file-row .file-size {
+    display: inline-block;
+}
+
+.upload-box .file-row .file-name {
+    max-width: 500px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 18px;
+    font-weight: 200;
+    margin: 0;
+    padding: 0;
+}
+
+.upload-box .file-row .file-progress {
+    width: 200px;
+    height: 24px;
+    background: white;
+    display: inline-block;
+    float: right;
+    border: 1px solid #ccc;
+}
+
+.upload-box .file-row .btn-remove {
+    display: inline-block;
+    font-size: 18px;
+    margin-right: 10px;
+    vertical-align: 5px;
+}

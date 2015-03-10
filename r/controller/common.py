@@ -9,7 +9,7 @@ def require_user(return_page="login"):
 
     user_id = r.model.user.current_user()
     if user_id is None:
-        raise RequestRedirect(url_for(return_page))
+        return None
 
     return user_id
 

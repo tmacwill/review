@@ -5,26 +5,28 @@ import r.controller.common
 import r.model.comment
 import r.model.file
 import r.model.upload
+import r.model.user
 import r.lib
 from r import app, db
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
+    user_id = r.model.user.current_user()
     if request.method == 'GET':
         return render_template('upload.html')
 
     else:
-        user_id = r.controller.common.require_user()
         files = []
         for key in request.files:
             for f in request.files.getlist(key):
-                files.append({
-                    'filename': f.filename,
-                    'contents': f.stream.read().decode()
-                })
+                if f.filename:
+                    files.append({
+                        'filename': f.filename,
+                        'contents': f.stream.read().decode()
+                    })
 
-        id = r.model.upload.create(user_id, request.form.get('name', 'Unnamed'), files)
-        return simplejson.dumps({'success': True, 'id': id})
+        upload = r.model.upload.create_with_files(user_id, request.form['name'], request.form['description'], files)
+        return redirect('/review/' + upload['slug'])
 
 @app.route('/review/<slug>')
 def view(slug):

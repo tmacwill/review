@@ -16,3 +16,22 @@ class Upload(r.db.DBObject):
 
 def get_by_slug(slug: str):
     return Upload.get_where({'slug': slug}, one=True)
+
+def create_with_files(user_id: str, name: str, description: str, files: list) -> str:
+    """ Create a new upload with a set of files. """
+
+    # create a new upload
+    upload = Upload.set({
+        'description': description,
+        'name': name,
+        'user_id': user_id
+    })[0]
+
+    # associate files with upload
+    r.model.file.File.set([{
+        'upload_id': upload['id'],
+        'filename': file['filename'],
+        'contents': file['contents']
+    } for file in files])
+
+    return upload

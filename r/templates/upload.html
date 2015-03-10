@@ -1,14 +1,59 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<link rel="import" href="/static/components/upload-widget.html" />
-
-<style>
-
-</style>
+<link rel="stylesheet" href="/static/css/upload.css" />
 
 <div class="container">
-    <upload-widget></upload-widget>
+    <div class="row">
+        <div id="upload-box" class="col-md-8 col-md-offset-2 content-area content-area-border upload-box">
+            <h1>Request a Review.</h1>
+            <form action="/upload" method="POST" id="upload-form" enctype="multipart/form-data">
+                <div id="files-container" class="files-container">
+                    <h3>Choose Files to Upload</h3>
+                    <div id="files-list" class="files-list"></div>
+                    <a href="#" id="btn-add-file" class="btn btn-default btn-add-file">Add File</a>
+                </div>
+                <input class="input-title" type="text" name="name" placeholder="What's your project called?" />
+                <textarea id="description" name="description" placeholder="Describe your project."></textarea>
+                <input type="submit" class="btn btn-primary btn-submit" id="btn-submit" value="Submit" />
+            </form>
+        </div>
+    </div>
 </div>
+
+{% raw %}
+<script>
+
+var fileRowTemplateSource = '<div class="file-row"><!-- a class="btn-remove" href="#">×</a --><h4 class="file-name">{{ name }}</h4><!-- div class="file-progress"></div --></div>';
+var inputTemplateSource = '<input class="input-file current-input" type="file" name="files[]" multiple />';
+
+$(function() {
+    var addInput = function() {
+        var $input = $(inputTemplate.render());
+    };
+
+    var fileRowTemplate = nunjucks.compile(fileRowTemplateSource);
+    var inputTemplate = nunjucks.compile(inputTemplateSource);
+    $('#upload-box #upload-form').append(inputTemplate.render());
+
+    $('#btn-add-file').on('click', function() {
+        $('#upload-box .input-file.current-input').trigger('click');
+    });
+
+    $('#upload-box').on('change', '.input-file', function() {
+        for (var i = 0; i < this.files.length; i++) {
+            var file = this.files[i];
+            $('#files-container #files-list').append(fileRowTemplate.render({
+                name: file.name,
+            }));
+        }
+
+        $('#upload-box .input-file.current-input').removeClass('current-input');
+        $('#upload-box #upload-form').append(inputTemplate.render());
+    });
+});
+
+</script>
+{% endraw %}
 
 {% endblock %}

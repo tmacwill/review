@@ -42,7 +42,7 @@ def _generate_api_key() -> str:
     return r.lib.generate_slug()
 
 def current_user() -> int:
-    return int(session.get('user_id', None))
+    return session.get('user_id')
 
 def get_by_email(email: str, filter=True) -> dict:
     user = User.get_where({'email': email}, one=True)

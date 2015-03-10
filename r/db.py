@@ -140,7 +140,7 @@ class DBObject(object):
 
     @classmethod
     def after_set(cls, rows, result):
-        return result.lastrowid
+        return rows
 
     @classmethod
     def before_delete(cls, ids):

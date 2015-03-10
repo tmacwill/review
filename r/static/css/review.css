@@ -32,6 +32,7 @@
 
 .files-container .file-contents {
     padding: 20px 30px;
+    overflow: scroll;
 }
 
 .files-container h3 {
