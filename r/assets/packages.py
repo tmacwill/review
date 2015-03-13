@@ -24,3 +24,6 @@ def register():
 
 def build():
     packager.build_packages()
+
+def monitor():
+    packager.monitor()

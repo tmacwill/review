@@ -1,5 +1,6 @@
 flask
-flask-assets
+flask-failsafe
+flask-script
 nose
 pygments
 pylint

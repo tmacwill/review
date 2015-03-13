@@ -28,22 +28,18 @@ class FileChangedEventHandler(watchdog.events.FileSystemEventHandler):
         self.packager.on_modified(event.src_path)
 
 class Packager(object):
-    def __init__(self, source, build, debug=True, monitor=True):
+    def __init__(self, source, build, debug=True):
         self.source = source
         self.build = build
         self.debug = debug
         self.packages = {}
         self.dependencies = {}
         self.last_modified = {}
-        self.monitoring = False
         self.asset = AssetFactory(self.source)
         self.builders = {
             'minified_javascript': MinifiedJavascriptBuilder(),
             'typescript': TypeScriptBuilder()
         }
-
-        if monitor:
-            self.monitor()
 
     def _build_asset(self, asset):
         if not asset.asset_type in self.builders:
@@ -63,6 +59,9 @@ class Packager(object):
         args = ['cat'] + files + ['>', output]
         os.system(' '.join(args))
 
+    def _is_modified(self, path):
+        return self.last_modified.get(path, 0) != os.path.getmtime(path)
+
     def _register_dependency(self, package, asset):
         self.dependencies.setdefault(asset.path, [])
         self.dependencies[asset.path].append(package)
@@ -79,6 +78,9 @@ class Packager(object):
             for reference in references:
                 path = os.path.normpath(os.path.dirname(asset.path) + '/' + reference + os.path.splitext(asset.path)[1])
                 self._register_dependencies(package, self.asset._asset(asset_type=asset.asset_type, path=path))
+
+    def _set_modified(self, path):
+        self.last_modified[path] = os.path.getmtime(path)
 
     def build_packages(self):
         """ Build all registered packages. """
@@ -101,7 +103,7 @@ class Packager(object):
         for path in output:
             os.unlink(path)
 
-    def monitor(self):
+    def monitor(self, block=False):
         """ Monitor the current directory for changes. """
 
         # start a watchdog monitor on the source directory
@@ -110,12 +112,25 @@ class Packager(object):
         self.observer = watchdog.observers.Observer()
         self.observer.schedule(event_handler, path=self.source, recursive=True)
         self.observer.start()
-        self.monitoring = True
+
+        if not block:
+            return self.observer
+
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            self.observer.stop()
+        self.observer.join()
 
     def on_modified(self, path: str):
         """ Called whenever a file we're monitoring is modified. """
 
+        if not path in self.dependencies or not self._is_modified(path):
+            return
+
         # when a file is modified, get all the packages that depend on it and build them
+        self._set_modified(path)
         packages = self.dependencies.get(path, [])
         for package in packages:
             self.build_package(package.package_name)
