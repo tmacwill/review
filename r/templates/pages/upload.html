@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% from "macros/upload_box.html" import upload_box %}
+
+{% block body %}
+
+<link rel="stylesheet" href="/static/css/upload.css" />
+<script type="text/javascript" src="/static/build/js/upload.min.js"></script>
+
+<div class="container">
+    <div class="row">
+        <div id="upload-box" class="col-md-8 col-md-offset-2 content-area content-area-border upload-box">
+            {{ upload_box() }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

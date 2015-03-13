@@ -13,7 +13,7 @@ from r import app, db
 def upload():
     user_id = r.model.user.current_user()
     if request.method == 'GET':
-        return render_template('upload.html')
+        return render_template('pages/upload.html')
 
     else:
         files = []
@@ -35,4 +35,4 @@ def view(slug):
         return render_template('error.html', error='Invalid URL')
 
     files = r.model.file.File.get_highlighted_for_upload(upload.id)
-    return render_template('review.html', upload=upload, files=files.values())
+    return render_template('pages/review.html', upload=upload, files=files.values())

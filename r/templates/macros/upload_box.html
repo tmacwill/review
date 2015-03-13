@@ -1,0 +1,15 @@
+{% macro upload_box() -%}
+
+<h1>Request a Review.</h1>
+<form action="/upload" method="POST" id="upload-form" enctype="multipart/form-data">
+    <div id="files-container" class="files-container">
+        <h3>Choose Files to Upload</h3>
+        <div id="files-list" class="files-list"></div>
+        <a href="#" id="btn-add-file" class="btn btn-default btn-add-file">Add File</a>
+    </div>
+    <input class="input-title" type="text" name="name" placeholder="What's your project called?" />
+    <textarea id="description" name="description" placeholder="Describe your project."></textarea>
+    <input type="submit" class="btn btn-primary btn-submit" id="btn-submit" value="Submit" />
+</form>
+
+{%- endmacro %}

@@ -9,17 +9,17 @@ def register():
     """ Register user. """
 
     # create new user on POST
-    if request.method == "POST":
+    if request.method == 'POST':
         # if email or passwords not provided, fail
-        if request.form["name"] == '' or request.form["email"] == '' or request.form["password"] == '' or request.form["password2"] == '':
+        if request.form['name'] == '' or request.form['email'] == '' or request.form['password'] == '' or request.form['password2'] == '':
             return render_template("error.html", error="Please enter an email address and password.")
 
         # make sure passwords match
-        if request.form["password"] != request.form["password2"]:
+        if request.form['password'] != request.form['password2']:
             return render_template("error.html", error="Passwords must match.")
 
         # else, look for email in db
-        user = r.model.user.get_by_email(request.form["email"], filter=False)
+        user = r.model.user.get_by_email(request.form['email'], filter=False)
 
         # if user is found, fail
         if user is not None:
@@ -27,22 +27,22 @@ def register():
             return render_template("error.html", error="Account for %s already exists" % request.form["email"])
 
         # add user to users table, and log in
-        id = r.model.user.create(request.form["name"], request.form["email"], request.form["password"])
-        session["user_id"] = id
+        id = r.model.user.create(request.form['name'], request.form['email'], request.form['password'])
+        session['user_id'] = id
         return redirect(url_for('home'))
 
-    # show login form on GET
+    # show register form on GET
     else:
-        return render_template("register.html")
+        return render_template('pages/register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """ Logs in the user with provided name and password (or shows login form). """
 
     # perform login on POST
-    if request.method == "POST":
+    if request.method == 'POST':
         # if email or password not provided, fail
-        if request.form["email"] == '' or request.form["password"] == '':
+        if request.form['email'] == '' or request.form['password'] == '':
             return render_template("error.html", error="Please enter an email address and password.")
 
         # else, look for email in db
@@ -54,15 +54,15 @@ def login():
             return render_template("error.html", error="No account for %s found" % request.form["email"])
 
         # check if password correct
-        elif check_password_hash(user["password"], request.form["password"]):
-            session["user_id"] = user["id"]
+        elif check_password_hash(user['password'], request.form['password']):
+            session['user_id'] = user['id']
             return redirect(url_for('home'))
         else:
             return render_template("error.html", error="Invalid password.")
 
     # show login form on GET
     else:
-        return render_template("login.html")
+        return render_template('pages/login.html')
 
 @app.route('/logout', methods=['GET'])
 def logout():

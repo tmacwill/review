@@ -189,6 +189,8 @@ class DBObject(object):
 
         # if every value was found, then we're done
         if len(ids) == len(values):
+            if one:
+                values = values.popitem()[1]
             return values
 
         # determine which ids haven't been fetched yet

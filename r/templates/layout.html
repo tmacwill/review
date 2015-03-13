@@ -7,9 +7,7 @@
         <link rel="stylesheet" href="/static/css/global.css" />
     </head>
     <body>
-        {% assets "js/lib" %}
-            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-        {% endassets %}
+        <script type="text/javascript" src="/static/build/js/lib.min.js"></script>
 
         {% block body %}{% endblock %}
     </body>
