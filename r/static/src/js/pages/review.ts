@@ -1,3 +1,3 @@
 /// <reference path="../macros/comment" />
 
-r.comment.init('.file table');
+r.comment.init('#files .file');

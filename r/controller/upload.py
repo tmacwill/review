@@ -34,5 +34,20 @@ def view(slug):
     if upload is None:
         return render_template('error.html', error='Invalid URL')
 
-    files = r.model.file.File.get_highlighted_for_upload(upload.id)
-    return render_template('pages/review.html', upload=upload, files=files.values())
+    # get files and comments associated with this upload
+    files = r.model.file.get_highlighted_for_upload(upload.id)
+    comments = r.model.comment.get_by_file_ids(list(files.keys()))
+    users = r.model.user.User.get([comment.user_id for comment in comments.values()] + [upload.user_id])
+
+    grouped_comments = {}
+    for comment in comments.values():
+        grouped_comments.setdefault(comment.file_id, [])
+        grouped_comments[comment.file_id].append(comment)
+
+    return render_template(
+        'pages/review.html',
+        upload=upload,
+        files=files.values(),
+        grouped_comments=grouped_comments,
+        users=users
+    )

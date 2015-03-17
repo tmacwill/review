@@ -54,9 +54,9 @@ def login():
             return render_template("error.html", error="No account for %s found" % request.form["email"])
 
         # check if password correct
-        elif check_password_hash(user['password'], request.form['password']):
-            session['user_id'] = user['id']
-            return redirect(url_for('home'))
+        elif check_password_hash(user.password, request.form['password']):
+            session['user_id'] = user.id
+            return redirect('/')
         else:
             return render_template("error.html", error="Invalid password.")
 

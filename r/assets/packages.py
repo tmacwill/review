@@ -22,8 +22,11 @@ def register():
         packager.asset.typescript('static/src/js/pages/upload.ts')
     ])
 
-def build():
+def build_packages():
     packager.build_packages()
+
+def build_package(package_name):
+    packager.build_package(package_name)
 
 def monitor():
     packager.monitor()

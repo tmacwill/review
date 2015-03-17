@@ -5,15 +5,14 @@ import pygments, pygments.lexers, pygments.formatters
 class File(r.db.DBObject):
     __table__ = 'files'
 
-    @classmethod
-    def get_highlighted_for_upload(cls, upload_id: str) -> list:
-        """ Get highlighted versions of the files for this upload. """
+def get_highlighted_for_upload(upload_id: str) -> list:
+    """ Get highlighted versions of the files for an upload. """
 
-        rows = cls.get_where({'upload_id': upload_id})
-        for row in rows.values():
-            row.contents = highlight(row.contents, row.filename)
+    rows = File.get_where({'upload_id': upload_id})
+    for row in rows.values():
+        row.contents = highlight(row.contents, row.filename)
 
-        return rows
+    return rows
 
 def highlight(text: str, filename: str) -> str:
     """ Syntax highlights text (from provided filename). Returns HTML as a string. """

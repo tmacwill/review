@@ -26,6 +26,12 @@ class User(r.db.DBObject):
         # remove fields like password for gets by default
         if isinstance(rows, list):
             return [_filter(row) for row in rows]
+        elif isinstance(rows, dict):
+            result = {}
+            for k, v in rows.items():
+                result[k] = _filter(v)
+            return result
+
         return _filter(rows)
 
 

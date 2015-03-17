@@ -11,12 +11,20 @@ def create_app():
 manager = flask.ext.script.Manager(create_app())
 
 @manager.command
+def build_package(package_name):
+    """ Build a single package. """
+
+    import r.assets.packages
+    r.assets.packages.register()
+    r.assets.packages.build_package(package_name)
+
+@manager.command
 def build_packages():
     """ Build all static packages. """
 
     import r.assets.packages
     r.assets.packages.register()
-    r.assets.packages.build()
+    r.assets.packages.build_packages()
 
 @manager.command
 def monitor_packages():
@@ -37,7 +45,7 @@ def runserver(host='0.0.0.0', port=9000):
     if not os.environ.get('REVIEW_SERVER_RUNNING'):
         import r.assets.packages
         r.assets.packages.register()
-        r.assets.packages.build()
+        r.assets.packages.build_packages()
         r.assets.packages.monitor()
 
     os.environ['REVIEW_SERVER_RUNNING'] = '1'

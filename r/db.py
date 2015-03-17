@@ -184,6 +184,7 @@ class DBObject(object):
         ids = cls.before_get(ids)
 
         # try to grab all of the objects at once
+        ids = list(set(ids))
         key_prefix = cls._cache_key(cls.__table__)
         values = r.cache.get_multi(ids, key_prefix=key_prefix)
 
@@ -191,7 +192,7 @@ class DBObject(object):
         if len(ids) == len(values):
             if one:
                 values = values.popitem()[1]
-            return values
+            return cls.after_get(values)
 
         # determine which ids haven't been fetched yet
         ids = set(ids)

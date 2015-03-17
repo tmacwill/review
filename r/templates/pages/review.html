@@ -1,45 +1,38 @@
-{% include "comment_box.html" %}
 {% extends "layout.html" %}
+{% from "macros/comment_box.html" import comment_box %}
+
 {% block body %}
 
 <link rel="stylesheet" href="/static/css/review.css" />
-
-{% assets "js/review" %}
-    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
+<script type="text/javascript" src="/static/build/js/review.min.js"></script>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-9 content-area content-area-border upload-header">
             <h1>{{ upload.name }}</h1>
-            <h3>by Tommy MacWilliam</h3>
+            <h3>by {{ users[upload.user_id].name }}</h3>
             <p class="upload-description">{{ upload.description }}</p>
         </div>
     </div>
 </div>
 
 <div class="container-fluid files-container">
-    <div class="files">
+    <div id="files" class="files">
         {% for file in files %}
-            <div class="row file">
+            <div class="row file" data-file-id="{{ file.id }}">
                 <div class="file-contents col-md-9 content-area content-area-border">
                     <h3>{{ file.filename }}</h3>
                     {{ file.contents | safe }}
                 </div>
-                <div class="col-md-3" class="comment-container">
-                    <div class="comment-box" style="top: 0; left: 10px">
-                        <h4><a href="#">Tommy MacWilliam</a></h4>
-                        <span class="timestamp">3 days ago</span>
-                        <div class="contents">
-                            <p>good idea to use a define macro here, this will make your code much easier to read in the future</p>
-                        </div>
-                    </div>
+                <div class="col-md-3" id="comment-container" class="comment-container">
+                    {% for comment in grouped_comments.get(file.id, []) %}
+                        {{ comment_box(users[comment.user_id].name, comment.line, comment.creation_time, comment.contents) }}
+                    {% endfor %}
                 </div>
             </div>
         {% endfor %}
     </div>
 </div>
-
 
 {# <div style="position: absolute; width: 500px; height: 1px; background: red; top: 500px; left: 200px; -webkit-transform: rotate(32deg)"> #}
 {# </div> #}

@@ -92,7 +92,7 @@ class Packager(object):
         """ Build a single package. """
 
         if self.debug:
-            print('Building', package_name)
+            print('Started building', package_name)
 
         # build each asset, then concatenate all output into a single package
         package = self.packages[package_name]
@@ -102,6 +102,9 @@ class Packager(object):
         # delete temporary files
         for path in output:
             os.unlink(path)
+
+        if self.debug:
+            print('Finished building', package_name)
 
     def monitor(self, block=False):
         """ Monitor the current directory for changes. """
