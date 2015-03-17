@@ -1,9 +1,12 @@
 declare var $: any;
 declare var _: any;
+declare var moment: any;
 declare var nunjucks: any;
 declare var current_user: any;
 
 module r.comment {
+    var DATE_FORMAT: string = 'MMMM Do, h:mma';
+
     export function init(tables) {
         $(function() {
             $(tables).each(function() {
@@ -51,7 +54,7 @@ module r.comment {
                 var $comment = $(nunjucks.render('comment_box.html', {
                     'author': current_user.name,
                     'line': line,
-                    'timestamp': 123,
+                    'timestamp': moment(),
                     'contents': ''
                 }));
 
@@ -103,6 +106,13 @@ module r.comment {
             this.fileId = fileId;
             this.id = this.$container.attr('data-id');
             this.line = parseInt(this.$container.attr('data-line'), 10);
+
+            // format timestamp to human-readable time
+            var $timestamp = this.$container.find('#timestamp');
+            var timestamp = $timestamp.html()
+            if (/^\d+$/.test(timestamp)) {
+                $timestamp.html(moment(new Date(parseInt(timestamp, 10))).format(DATE_FORMAT));
+            }
 
             this.bind();
         }
