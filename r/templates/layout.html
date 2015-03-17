@@ -9,6 +9,10 @@
     <body>
         <script type="text/javascript" src="/static/build/js/lib.min.js"></script>
 
+        <script>
+        window.current_user = {{ current_user_json|safe }};
+        </script>
+
         {% block body %}{% endblock %}
     </body>
 </html>

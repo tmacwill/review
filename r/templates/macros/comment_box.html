@@ -1,10 +1,10 @@
-{% macro comment_box(author, line, timestamp, contents) %}
+{% macro comment_box(id, author, line, timestamp, contents) %}
 
-<div class="comment-box" style="top: 0" data-line="{{ line }}">
+<div class="comment-box" data-id="{{ id }}" data-line="{{ line }}">
     <h4><a href="#">{{ author }}</a></h4>
     <span class="timestamp">{{ timestamp }}</span>
-    <div class="contents">
-        <p>{{ contents }}</p>
+    <div id="contents" class="contents" contenteditable>
+        {{ contents }}
     </div>
 </div>
 

@@ -12,10 +12,3 @@ def require_user(return_page="login"):
         return None
 
     return user_id
-
-def success_response(data=None):
-    if not data:
-        data = {}
-
-    data['success'] = True
-    return simplejson.dumps(data)

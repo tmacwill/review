@@ -26,7 +26,7 @@
                 </div>
                 <div class="col-md-3" id="comment-container" class="comment-container">
                     {% for comment in grouped_comments.get(file.id, []) %}
-                        {{ comment_box(users[comment.user_id].name, comment.line, comment.creation_time, comment.contents) }}
+                        {{ comment_box(comment.id, users[comment.user_id].name, comment.line, comment.creation_time, comment.contents) }}
                     {% endfor %}
                 </div>
             </div>

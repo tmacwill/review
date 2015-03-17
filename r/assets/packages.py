@@ -15,7 +15,8 @@ def register():
     ])
 
     packager.register('js/review.min.js', [
-        packager.asset.typescript('static/src/js/pages/review.ts')
+        packager.asset.typescript('static/src/js/pages/review.ts'),
+        packager.asset.template('templates/macros/comment_box.html')
     ])
 
     packager.register('js/upload.min.js', [

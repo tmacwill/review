@@ -69,6 +69,11 @@
     left: 10px;
 }
 
+.comment-box .contents {
+    max-height: 75px;
+    overflow: scroll;
+}
+
 .comment-box h4 {
     font-size: 14px;
     margin: 0;

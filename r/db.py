@@ -122,7 +122,7 @@ class DBObject(object):
         return result
 
     def __to_json__(self):
-        result = {k: getattr(self, k) for k in self.__fields__}
+        result = {k: getattr(self, k) for k in self.__fields__ if hasattr(self, k)}
         return result
 
     @classmethod
@@ -180,6 +180,9 @@ class DBObject(object):
     @classmethod
     def get(cls, ids, one=False):
         """ Get rows by ID, fetching and storing uncached values appropriately. """
+
+        if not isinstance(ids, list):
+            ids = [ids]
 
         ids = cls.before_get(ids)
 

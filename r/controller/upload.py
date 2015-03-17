@@ -35,19 +35,21 @@ def view(slug):
         return render_template('error.html', error='Invalid URL')
 
     # get files and comments associated with this upload
+    current_user = r.model.user.current_user()
     files = r.model.file.get_highlighted_for_upload(upload.id)
     comments = r.model.comment.get_by_file_ids(list(files.keys()))
-    users = r.model.user.User.get([comment.user_id for comment in comments.values()] + [upload.user_id])
+    users = r.model.user.User.get([comment.user_id for comment in comments.values()] + [upload.user_id, current_user])
 
     grouped_comments = {}
     for comment in comments.values():
         grouped_comments.setdefault(comment.file_id, [])
         grouped_comments[comment.file_id].append(comment)
 
-    return render_template(
+    return r.lib.render(
         'pages/review.html',
         upload=upload,
         files=files.values(),
         grouped_comments=grouped_comments,
-        users=users
+        users=users,
+        user_json=r.lib.to_json(users[current_user])
     )

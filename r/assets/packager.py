@@ -38,12 +38,13 @@ class Packager(object):
         self.asset = AssetFactory(self.source)
         self.builders = {
             'minified_javascript': MinifiedJavascriptBuilder(),
+            'template': TemplateBuilder(),
             'typescript': TypeScriptBuilder()
         }
 
     def _build_asset(self, asset):
         if not asset.asset_type in self.builders:
-            raise BuildError("Unknown asset type: %s" % asset.asset_type)
+            print("Unknown asset type: %s" % asset.asset_type)
 
         # map the asset type to a builder and write output to a temporary file
         output = tempfile.mktemp()
@@ -160,11 +161,11 @@ class AssetFactory(object):
     def minified_javascript(self, path):
         return self._asset(asset_type='minified_javascript', path=self.source + path)
 
-    def typescript(self, path):
-        return self._asset(asset_type='typescript', path=self.source + path)
-
     def template(self, path):
         return self._asset(asset_type='template', path=self.source + path)
+
+    def typescript(self, path):
+        return self._asset(asset_type='typescript', path=self.source + path)
 
 class _Builder(object):
     def run(self, args, capture=True):
@@ -180,7 +181,7 @@ class _Builder(object):
 
             stdout, stderr = process.communicate()
             if process.returncode != 0:
-                raise BuildError("Packaging error: %s" % stdout)
+                print("Packaging error: %s" % stdout)
 
         else:
             os.system(' '.join(args))
@@ -191,6 +192,17 @@ class _Builder(object):
 class MinifiedJavascriptBuilder(_Builder):
     def build(self, asset, output):
         self.run(['cat', asset.path, '>', output], capture=False)
+
+class TemplateBuilder(_Builder):
+    def build(self, asset, output):
+        # each template contains macro and endmacro tags, so strip those before precompiling
+        with open(asset.path, 'r') as read:
+            tmp = tempfile.mktemp()
+            with open(tmp, 'w') as write:
+                write.writelines(read.readlines()[1:-1])
+
+            self.run(['nunjucks-precompile', '--name', os.path.basename(asset.path), tmp, '>', output], capture=False)
+            os.unlink(tmp)
 
 class TypeScriptBuilder(_Builder):
     def build(self, asset, output):

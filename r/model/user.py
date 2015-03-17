@@ -35,12 +35,14 @@ class User(r.db.DBObject):
         return _filter(rows)
 
 
-def _filter(user, password=True, api=True):
+def _filter(user, password=True, api=True, email=True):
     u = copy.copy(user)
     if password and hasattr(u, 'password'):
         del u.password
     if api and hasattr(u, 'api'):
         del u.api
+    if email and hasattr(u, 'email'):
+        del u.email
 
     return u
 
