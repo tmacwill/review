@@ -27,8 +27,8 @@ module r.comment {
         constructor($container: any, fileId: string) {
             this.$container = $($container);
             this.fileId = fileId;
-            this.$numbers = this.$container.find('.linenodiv a');
-            this.$code = this.$container.find('.code');
+            this.$numbers = this.$container.find('.line-number:not(.padding) a');
+            this.$code = this.$container.find('.code:not(.padding)');
             this.$commentContainer = this.$container.find('#comment-container');
 
             // load comments already present on page load
@@ -45,10 +45,10 @@ module r.comment {
 
         bind() {
             var self = this;
-            $(this.$container.find('.linenodiv')).on('click', 'a', function(e) {
+            var $contents = $(this.$container.find('#file-contents'));
+            $contents.on('click', '.line-number a', function(e) {
                 // determine which line was clicked
-                var href = $(this).attr('href');
-                var line = parseInt(href.substring(href.lastIndexOf('-') + 1));
+                var line = parseInt($(this).attr('data-line'), 10);
 
                 // render a new comment box
                 var $comment = $(nunjucks.render('comment_box.html', {
@@ -64,7 +64,20 @@ module r.comment {
                 self.comments.push(box);
                 self.layout();
                 box.focus();
+
                 return false;
+            });
+
+            this.$container.on('mouseover', '.comment-box, .code', function(e) {
+                var line = $(this).attr('data-line');
+                self.$container.find('.comment-box[data-line="' + line + '"]').addClass('hover');
+                self.$container.find('.code[data-line="' + line + '"]').addClass('hover');
+            });
+
+            this.$container.on('mouseout', '.comment-box, .code', function(e) {
+                var line = parseInt($(this).attr('data-line'), 10);
+                self.$container.find('.comment-box[data-line="' + line + '"]').removeClass('hover');
+                self.$container.find('.code[data-line="' + line + '"]').removeClass('hover');
             });
         }
 
@@ -91,6 +104,8 @@ module r.comment {
             for (var i = 0; i < sortedBounds.length; i++) {
                 var box = sortedBounds[i];
                 box.comment.setTop(box.top);
+
+                $(this.$code[box.comment.line - 1]).addClass('highlight');
             }
         }
     }

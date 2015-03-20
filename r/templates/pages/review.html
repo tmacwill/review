@@ -14,27 +14,24 @@
             <p class="upload-description">{{ upload.description }}</p>
         </div>
     </div>
-</div>
 
-<div class="container-fluid files-container">
-    <div id="files" class="files">
-        {% for file in files %}
-            <div class="row file" data-file-id="{{ file.id }}">
-                <div class="file-contents col-md-9 content-area content-area-border">
-                    <h3>{{ file.filename }}</h3>
-                    {{ file.contents | safe }}
+    <div class="files-container">
+        <div id="files" class="files">
+            {% for file in files %}
+                <div class="row file" data-file-id="{{ file.id }}">
+                    <div id="file-contents" class="file-contents col-md-9 content-area content-area-border">
+                        <h3>{{ file.filename }}</h3>
+                        {{ file.contents | safe }}
+                    </div>
+                    <div class="col-md-3" id="comment-container" class="comment-container">
+                        {% for comment in grouped_comments.get(file.id, []) %}
+                            {{ comment_box(comment.id, users[comment.user_id].name, comment.line, comment.creation_time, comment.contents) }}
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="col-md-3" id="comment-container" class="comment-container">
-                    {% for comment in grouped_comments.get(file.id, []) %}
-                        {{ comment_box(comment.id, users[comment.user_id].name, comment.line, comment.creation_time, comment.contents) }}
-                    {% endfor %}
-                </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 </div>
-
-{# <div style="position: absolute; width: 500px; height: 1px; background: red; top: 500px; left: 200px; -webkit-transform: rotate(32deg)"> #}
-{# </div> #}
 
 {% endblock %}

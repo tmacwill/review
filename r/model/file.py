@@ -2,6 +2,27 @@ import r.cache
 import r.db
 import pygments, pygments.lexers, pygments.formatters
 
+class TableHTMLFormatter(pygments.formatters.HtmlFormatter):
+    def wrap(self, source, outfile):
+        # wrap the entire output in a single table
+        yield 0, '<table class="file-contents-table">'
+        yield 0, '<tbody>'
+        yield 0, '<tr class="first-row"><td class="line-number padding">&nbsp;</td><td class="code padding">&nbsp;</td></tr>'
+
+        # each line of source code is a row in the table, with the line numbers in one cell and the code in another
+        line_number = 1
+        for i, t in source:
+            line = '<tr>'
+            line += '<td class="line-number"><a href="#" data-line="%s">%s</a></td>' % (line_number, line_number)
+            line += '<td class="code" data-line="%s">%s</td>' % (line_number, t)
+            line += '</tr>'
+            yield i, line
+
+            line_number += 1
+
+        yield 0, '</tbody>'
+        yield 0, '</table>'
+
 class File(r.db.DBObject):
     __table__ = 'files'
 
@@ -18,5 +39,5 @@ def highlight(text: str, filename: str) -> str:
     """ Syntax highlights text (from provided filename). Returns HTML as a string. """
 
     lexer = pygments.lexers.guess_lexer_for_filename(filename, text)
-    formatter = pygments.formatters.HtmlFormatter(linenos="table", linespans="line", anchorlinenos=True, lineanchors=filename)
+    formatter = TableHTMLFormatter()
     return '<style>' + formatter.get_style_defs() + '</style>' + pygments.highlight(text, lexer, formatter)

@@ -135,7 +135,7 @@ class DBObject(object):
         return
 
     @classmethod
-    def after_get(cls, rows):
+    def after_get(cls, rows, metadata=None):
         return rows
 
     @classmethod
@@ -147,7 +147,7 @@ class DBObject(object):
         return
 
     @classmethod
-    def before_get(cls, ids):
+    def before_get(cls, ids, metadata=None):
         return ids
 
     @classmethod
@@ -178,13 +178,13 @@ class DBObject(object):
         r.cache.delete_multi(ids, key_prefix=cls._cache_key())
 
     @classmethod
-    def get(cls, ids, one=False):
+    def get(cls, ids, one=False, metadata=None):
         """ Get rows by ID, fetching and storing uncached values appropriately. """
 
         if not isinstance(ids, list):
             ids = [ids]
 
-        ids = cls.before_get(ids)
+        ids = cls.before_get(ids, metadata=metadata)
 
         # try to grab all of the objects at once
         ids = list(set(ids))
@@ -195,7 +195,7 @@ class DBObject(object):
         if len(ids) == len(values):
             if one:
                 values = values.popitem()[1]
-            return cls.after_get(values)
+            return cls.after_get(values, metadata=metadata)
 
         # determine which ids haven't been fetched yet
         ids = set(ids)
@@ -216,7 +216,7 @@ class DBObject(object):
         if one:
             values = values.popitem()[1]
 
-        return cls.after_get(values)
+        return cls.after_get(values, metadata=metadata)
 
     @classmethod
     def get_count_where(cls, options=None):
@@ -239,9 +239,9 @@ class DBObject(object):
         return [row['id'] for row in rows]
 
     @classmethod
-    def get_where(cls, options=None, limit=None, offset=None, order=None, one=False):
+    def get_where(cls, options=None, limit=None, offset=None, order=None, one=False, metadata=None):
         ids = cls.get_ids(options, limit=limit, offset=offset, order=order)
-        return cls.get(ids, one=one)
+        return cls.get(ids, one=one, metadata=metadata)
 
     @classmethod
     def set(cls, rows):

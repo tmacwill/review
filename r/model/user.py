@@ -22,7 +22,11 @@ class User(r.db.DBObject):
         return rows
 
     @classmethod
-    def after_get(cls, rows):
+    def after_get(cls, rows, metadata=None):
+        metadata = metadata or {}
+        if not metadata.get('filter', True):
+            return rows
+
         # remove fields like password for gets by default
         if isinstance(rows, list):
             return [_filter(row) for row in rows]
@@ -53,14 +57,14 @@ def current_user() -> int:
     return session.get('user_id')
 
 def get_by_email(email: str, filter=True) -> dict:
-    user = User.get_where({'email': email}, one=True)
+    user = User.get_where({'email': email}, one=True, metadata={'filter': filter})
     if filter:
         user = _filter(user)
 
     return user
 
 def get_by_username(username: str, filter=True) -> dict:
-    user = User.get_where({'username': username}, one=True)
+    user = User.get_where({'username': username}, one=True, metadata={'filter': filter})
     if filter:
         user = _filter(user)
 
