@@ -26,6 +26,14 @@ class TableHTMLFormatter(pygments.formatters.HtmlFormatter):
 class File(r.db.DBObject):
     __table__ = 'files'
 
+    @classmethod
+    def before_set(cls, rows):
+        for row in rows:
+            if not row.get('id'):
+                row['line_count'] = len(row['contents'].split("\n"))
+
+        return rows
+
 def get_highlighted_for_upload(upload_id: str) -> list:
     """ Get highlighted versions of the files for an upload. """
 
