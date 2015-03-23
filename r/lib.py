@@ -32,7 +32,7 @@ def success_response(data=None):
         data = {}
 
     data['success'] = True
-    return simplejson.dumps(data)
+    return to_json(data)
 
 def to_json(obj):
     """ Serialize an object to JSON. """

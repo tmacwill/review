@@ -1,6 +1,7 @@
 import r.cache
 import r.db
 import r.model.file
+import r.model.tag_upload
 import r.lib
 
 class Upload(r.db.DBObject):
@@ -17,7 +18,7 @@ class Upload(r.db.DBObject):
 def get_by_slug(slug: str):
     return Upload.get_where({'slug': slug}, one=True)
 
-def create_with_files(user_id: str, name: str, description: str, files: list) -> str:
+def create_with_files(user_id: str, name: str, description: str, files: list, tags: list) -> str:
     """ Create a new upload with a set of files. """
 
     # create a new upload
@@ -33,5 +34,11 @@ def create_with_files(user_id: str, name: str, description: str, files: list) ->
         'filename': file['filename'],
         'contents': file['contents']
     } for file in files])
+
+    # associate tags with upload
+    r.model.tag_upload.TagUpload.set([{
+        'upload_id': upload['id'],
+        'tag_id': tag
+    } for tag in tags])
 
     return upload

@@ -7,9 +7,21 @@
         <div id="files-list" class="files-list"></div>
         <a href="#" id="btn-add-file" class="btn btn-default btn-add-file">Add File</a>
     </div>
-    <input class="input-title" type="text" name="name" placeholder="What's your project called?" />
+    <div class="row">
+        <div class="col-md-6">
+            <input class="input-title" type="text" name="name" placeholder="What's your project called?" />
+        </div>
+        <div class="col-md-6">
+            <input id="input-tags" class="input-tags" type="text" placeholder="Search for tags to add to your project." />
+            <div id="typeahead" class="typeahead">
+                <ul id="typeahead-list"></ul>
+            </div>
+        </div>
+    </div>
+    <div id="tags-container" class="tags-container"></div>
+    <div id="tags-input-container"></div>
     <textarea id="description" name="description" placeholder="Describe your project."></textarea>
-    <input type="submit" class="btn btn-primary btn-submit" id="btn-submit" value="Submit" />
+    <a href="#" class="btn btn-primary btn-submit" id="btn-submit">Submit</a>
 </form>
 
 {%- endmacro %}

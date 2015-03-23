@@ -6,6 +6,7 @@ import r.model.comment
 import r.model.file
 import r.model.upload
 import r.model.user
+import r.model.tag
 import r.lib
 from r import app, db
 
@@ -25,7 +26,8 @@ def upload():
                         'contents': f.stream.read().decode()
                     })
 
-        upload = r.model.upload.create_with_files(user_id, request.form['name'], request.form['description'], files)
+        upload = r.model.upload.create_with_files(user_id, request.form['name'], request.form['description'],
+            files, request.form.getlist('tags[]'))
         return redirect('/review/' + upload['slug'])
 
 @app.route('/review/<slug>')
@@ -34,11 +36,12 @@ def view(slug):
     if upload is None:
         return render_template('error.html', error='Invalid URL')
 
-    # get files and comments associated with this upload
+    # get everything associated with this upload
     current_user = r.model.user.current_user()
     files = r.model.file.get_highlighted_for_upload(upload.id)
     comments = r.model.comment.get_by_file_ids(list(files.keys()))
     users = r.model.user.User.get([comment.user_id for comment in comments.values()] + [upload.user_id, current_user])
+    tags = r.model.tag.get_by_upload_id(upload.id)
 
     grouped_comments = {}
     for comment in comments.values():
@@ -50,6 +53,7 @@ def view(slug):
         upload=upload,
         files=files.values(),
         grouped_comments=grouped_comments,
+        tags=tags,
         users=users,
         user_json=r.lib.to_json(users[current_user])
     )

@@ -102,7 +102,10 @@ class Packager(object):
 
         # delete temporary files
         for path in output:
-            os.unlink(path)
+            try:
+                os.unlink(path)
+            except FileNotFoundError:
+                pass
 
         if self.debug:
             print('Finished building', package_name)

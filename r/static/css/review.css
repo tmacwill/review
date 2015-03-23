@@ -8,8 +8,9 @@
 
 .upload-header h3 {
     color: #167F39;
-    display: inline-block;
-    margin-left: 5px;
+    display: block;
+    margin-top: 10px;
+    font-size: 24px;
 }
 
 .upload-header p {
@@ -20,6 +21,12 @@
 
 .upload-header .stats-table {
     font-size: 18px;
+}
+
+.upload-header .tags-container {
+    display: inline-block;
+    vertical-align: 9px;
+    margin-left: 8px;
 }
 
 .files-container {

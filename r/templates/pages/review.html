@@ -10,6 +10,11 @@
     <div class="row">
         <div class="col-md-9 content-area content-area-border upload-header">
             <h1>{{ upload.name }}</h1>
+            <div class="tags-container">
+                {% for tag in tags.values() %}
+                    <span class="btn-tag">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
             <h3>by {{ users[upload.user_id].name }}</h3>
             <p class="upload-description">{{ upload.description }}</p>
         </div>
