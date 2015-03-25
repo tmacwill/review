@@ -1,6 +1,5 @@
-import r.cache
-import r.db
 import pygments, pygments.lexers, pygments.formatters
+import r
 
 class TableHTMLFormatter(pygments.formatters.HtmlFormatter):
     def wrap(self, source, outfile):

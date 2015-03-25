@@ -1,5 +1,5 @@
 from flask import request
-import r.model.tag
+import r
 from r import app
 
 @app.route('/tags/autocomplete', methods=['GET'])

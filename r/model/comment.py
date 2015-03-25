@@ -1,5 +1,5 @@
 import itertools
-import r.db
+import r
 
 class Comment(r.db.DBObject):
     __table__ = 'comments'

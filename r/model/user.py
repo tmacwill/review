@@ -1,9 +1,7 @@
-import r.cache
-import r.db
-import r.lib
 import copy
 from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
+import r
 
 class User(r.db.DBObject):
     __table__ = 'users'

@@ -1,14 +1,9 @@
 import simplejson
 from flask import render_template, request, session, redirect, url_for
 
+import r
 import r.controller.common
-import r.model.comment
-import r.model.file
-import r.model.upload
-import r.model.user
-import r.model.tag
-import r.lib
-from r import app, db
+from r import app
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():

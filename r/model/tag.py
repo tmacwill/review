@@ -1,5 +1,4 @@
-import r.db
-import r.model.tag_upload
+import r
 
 class Tag(r.db.DBObject):
     __table__ = 'tags'

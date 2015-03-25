@@ -2,9 +2,8 @@ import operator
 import pymysql
 import time
 from flask import g
+import r
 from r import app
-import r.cache
-import r.lib
 
 DATABASE = 'review'
 USER = 'root'
@@ -92,7 +91,7 @@ def get_where(table, options=None, limit=None, offset=None, order=None, one=Fals
     result = get(query, args, one)
     return result
 
-def query(sql, args=None, skip_cache=False):
+def query(sql, args=None):
     """ Queries the database and returns cursor. """
 
     cur = _get_db().cursor(pymysql.cursors.DictCursor)
@@ -178,7 +177,7 @@ class DBObject(object):
         if not isinstance(ids, list):
             ids = [ids]
 
-        r.cache.delete_multi(ids, key_prefix=cls._cache_key())
+        r.store.delete_multi(ids, key_prefix=cls._cache_key())
 
     @classmethod
     def get(cls, ids, one=False, metadata=None):
@@ -192,7 +191,7 @@ class DBObject(object):
         # try to grab all of the objects at once
         ids = list(set(ids))
         key_prefix = cls._cache_key(cls.__table__)
-        values = r.cache.get_multi(ids, key_prefix=key_prefix)
+        values = r.store.get_multi(ids, key_prefix=key_prefix)
 
         # if every value was found, then we're done
         if len(ids) == len(values):
@@ -210,7 +209,7 @@ class DBObject(object):
         cache_mapping = {}
         for value in remaining:
             cache_mapping[value['id']] = cls(value)
-        r.cache.set_multi(cache_mapping, key_prefix=key_prefix, timeout=cls.__timeout__)
+        r.store.set_multi(cache_mapping, key_prefix=key_prefix, timeout=cls.__timeout__)
 
         # return the union of the cached and uncached values
         values.update(cache_mapping)

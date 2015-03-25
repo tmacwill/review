@@ -1,7 +1,5 @@
 from flask import request
-import r.lib
-import r.model.comment
-import r.model.user
+import r
 from r import app
 
 @app.route('/comment', methods=['POST'])

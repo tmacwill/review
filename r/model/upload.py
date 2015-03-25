@@ -1,8 +1,4 @@
-import r.cache
-import r.db
-import r.model.file
-import r.model.tag_upload
-import r.lib
+import r
 
 class Upload(r.db.DBObject):
     __table__ = 'uploads'

@@ -1,13 +1,16 @@
 import os
-import r.assets.packager
+import r
 from r import app
 
-packager = r.assets.packager.Packager(
-    os.path.dirname(r.__file__) + '/',
-    app.static_folder + '/build/'
-)
+packager = None
 
 def register():
+    global packager
+    packager = r.assets.packager.Packager(
+        os.path.dirname(r.__file__) + '/',
+        app.static_folder + '/build/'
+    )
+
     packager.register('js/lib.min.js', [
         packager.asset.minified_javascript('static/src/js/lib/jquery-1.11.1.min.js'),
         packager.asset.minified_javascript('static/src/js/lib/underscore-min.js'),
