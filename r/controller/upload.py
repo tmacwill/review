@@ -14,7 +14,7 @@ from r import app, db
 def upload():
     user_id = r.model.user.current_user()
     if request.method == 'GET':
-        return render_template('pages/upload.html')
+        return r.lib.render('pages/upload.html')
 
     else:
         files = []
@@ -55,5 +55,4 @@ def view(slug):
         grouped_comments=grouped_comments,
         tags=tags,
         users=users,
-        user_json=r.lib.to_json(users[current_user])
     )

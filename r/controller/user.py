@@ -3,6 +3,7 @@ from flask import render_template, request, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import r.model.user
 import r.cache
+import r.lib
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -23,7 +24,6 @@ def register():
 
         # if user is found, fail
         if user is not None:
-            # escaping is done in template
             return render_template("error.html", error="Account for %s already exists" % request.form["email"])
 
         # add user to users table, and log in
@@ -33,7 +33,7 @@ def register():
 
     # show register form on GET
     else:
-        return render_template('pages/register.html')
+        return r.lib.render('pages/register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -50,7 +50,6 @@ def login():
 
         # if no user found, fail
         if user is None:
-            # escaping is done in template
             return render_template("error.html", error="No account for %s found" % request.form["email"])
 
         # check if password correct
@@ -62,7 +61,7 @@ def login():
 
     # show login form on GET
     else:
-        return render_template('pages/login.html')
+        return r.lib.render('pages/login.html')
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -83,5 +82,5 @@ def profile(username):
     upload_count = r.model.upload.Upload.get_count_where({'user_id': user.id})
     comment_count = r.model.comment.Comment.get_count_where({'user_id': user.id})
 
-    return render_template('profile.html', uploads=uploads, upload_count=upload_count, comment_count=comment_count,
+    return r.lib.render('pages/profile.html', uploads=uploads, upload_count=upload_count, comment_count=comment_count,
         line_count=123, user=user)

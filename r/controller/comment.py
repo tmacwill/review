@@ -1,4 +1,5 @@
 from flask import request
+import r.lib
 import r.model.comment
 import r.model.user
 from r import app
@@ -17,3 +18,12 @@ def create():
 
     comment = r.model.comment.Comment.set(data)
     return r.lib.success_response({'id': comment[0]['id']})
+
+@app.route('/comment/<comment_id>', methods=['DELETE'])
+def delete(comment_id):
+    comment = r.model.comment.Comment.get(comment_id, one=True)
+    if not comment or comment.user_id != r.model.user.current_user():
+        return r.lib.fail_response()
+
+    r.model.comment.Comment.delete(comment_id)
+    return r.lib.success_response()

@@ -156,10 +156,13 @@ class DBObject(object):
 
     @classmethod
     def delete(cls, ids):
+        if not isinstance(ids, list):
+            ids = [ids]
+
         cls.before_delete(ids)
 
         # delete by the primary key
-        sql = "DELETE FROM %s WHERE id IN" % (cls.__table__, values(ids))
+        sql = "DELETE FROM %s WHERE id IN %s" % (cls.__table__, values(ids))
         result = query(sql)
 
         # dirty the cache for deleted rows

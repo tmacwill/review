@@ -1,8 +1,11 @@
-{% macro comment_box(id, author, line, timestamp, contents) %}
+{% macro comment_box(id, user, line, timestamp, contents, current_user) %}
 
-<div class="comment-box" data-id="{{ id }}" data-line="{{ line }}">
-    <h4><a href="#">{{ author }}</a></h4>
+<div class="comment-box" data-id="{{ id }}" data-line="{{ line }}" data-user-id="{{ user.id }}">
+    <h4><a href="/profile/{{ user.username }}" target="_blank">{{ user.name }}</a></h4>
     <span id="timestamp" class="timestamp">{{ timestamp }}</span>
+    {% if current_user and current_user.id == user.id %}
+        <a href="#" class="btn-remove">×</a>
+    {% endif %}
     <div id="contents" class="contents" contenteditable>
         {{ contents }}
     </div>

@@ -3,6 +3,13 @@ import simplejson
 import time
 import uuid
 
+def fail_response(data=None):
+    if not data:
+        data = {}
+
+    data['success'] = False
+    return to_json(data)
+
 def generate_slug():
     """ Returns a 32-character slug. """
 
@@ -20,10 +27,12 @@ def render(template_name, **kwargs):
     if not 'current_user_json' in kwargs:
         uid = r.model.user.current_user()
         if not uid:
+            kwargs['current_user'] = False
             kwargs['current_user_json'] = 'false'
         else:
-            user = r.model.user.User.get(uid)
-            kwargs['current_user_json'] = to_json(user[uid])
+            user = r.model.user.User.get(uid, one=True)
+            kwargs['current_user'] = user
+            kwargs['current_user_json'] = to_json(user)
 
     return render_template(template_name, **kwargs)
 

@@ -50,12 +50,14 @@ module r.comment {
                 // determine which line was clicked
                 var line = parseInt($(this).attr('data-line'), 10);
 
-                // render a new comment box
+                // render a new comment box (because we're creating the comment, we know that
+                // the current user and author user are the same)
                 var $comment = $(nunjucks.render('comment_box.html', {
-                    'author': current_user.name,
+                    'contents': '',
+                    'current_user': current_user,
                     'line': line,
                     'timestamp': moment(),
-                    'contents': ''
+                    'user': current_user
                 }));
 
                 // render the comment box
@@ -139,10 +141,27 @@ module r.comment {
             this.$container.on('blur', '#contents', function(e) {
                 self.save();
             });
+
+            // remove comment when the x is clicked
+            this.$container.on('click', '.btn-remove', function(e) {
+                self.remove();
+                return false;
+            });
         }
 
         contents() {
             return this.$container.find('#contents').html();
+        }
+
+        remove() {
+            var self = this;
+            $.ajax({
+                'url': '/comment/' + this.id,
+                'type': 'delete',
+                'success': function(response) {
+                    self.$container.hide();
+                }
+            })
         }
 
         empty() {

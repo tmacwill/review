@@ -87,7 +87,7 @@
 .comment-box {
     background: rgba(249, 250, 210, 1.0);
     border: 1px solid #ccc;
-    padding: 6px 10px;
+    padding: 6px 7px 6px 10px;
     font-size: 13px;
     position: absolute;
     left: 10px;
@@ -115,6 +115,16 @@
     margin: 0;
 }
 
-.comment-box h4, .comment-box .timestamp {
+.comment-box h4, .comment-box .timestamp, .comment-box .btn-remove {
     display: inline-block;
+}
+
+.comment-box .timestamp {
+    margin-right: 20px;
+}
+
+.comment-box .btn-remove {
+    float: right;
+    margin-top: -4px;
+    margin-left: -4px;
 }
