@@ -16,9 +16,6 @@ def _connect_db():
     conn = pymysql.connect(database=DATABASE, user=USER, autocommit=True)
     return conn
 
-def _cache_key(table, id=''):
-    return 'gbi:' + table + ':' + id
-
 def _get_db():
     """
     Opens a new database connection if there is none yet for the
@@ -109,6 +106,7 @@ def values(v):
 class DBObject(object):
     __table__ = None
     __timeout__ = 3600
+    __version__ = 0
 
     def __init__(self, fields):
         self.__fields__ = list(fields.keys())
@@ -127,7 +125,8 @@ class DBObject(object):
     @classmethod
     def _cache_key(cls, id=''):
         """ The cache key for an object in the table. """
-        return 'db:' + cls.__table__ + ':' + id
+
+        return "db:%s:%s:%s" % (cls.__table__, cls.__version__, id)
 
     @classmethod
     def after_delete(cls, ids):
@@ -177,7 +176,7 @@ class DBObject(object):
         if not isinstance(ids, list):
             ids = [ids]
 
-        r.store.delete_multi(ids, key_prefix=cls._cache_key())
+        r.store.delete_multi([cls._cache_key(id) for id in ids])
 
     @classmethod
     def get(cls, ids, one=False, metadata=None):
@@ -190,7 +189,7 @@ class DBObject(object):
 
         # try to grab all of the objects at once
         ids = list(set(ids))
-        key_prefix = cls._cache_key(cls.__table__)
+        key_prefix = cls._cache_key()
         values = r.store.get_multi(ids, key_prefix=key_prefix)
 
         # if every value was found, then we're done

@@ -1,8 +1,7 @@
 import simplejson
-from flask import render_template, request, session, redirect, url_for
+from flask import request, redirect
 
 import r
-import r.controller.common
 from r import app
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -29,7 +28,7 @@ def upload():
 def view(slug):
     upload = r.model.upload.get_by_slug(slug)
     if upload is None:
-        return render_template('error.html', error='Invalid URL')
+        return r.lib.render('error.html', error='Invalid URL')
 
     # get everything associated with this upload
     current_user = r.model.user.current_user()

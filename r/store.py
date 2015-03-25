@@ -108,17 +108,17 @@ def configure(shards: dict=None):
     for shard_id, data in shards.items():
         _instances[shard_id] = redis.StrictRedis(host=data['host'], port=data['port'])
 
-def delete(key: str, shard=_DEFAULT_SHARD):
+def delete(key: str, shard=_DEFAULT_SHARD, key_prefix=''):
     """ Delete a value from the cache. """
 
-    _client(shard).delete(key)
+    _client(shard).delete(key_prefix + key)
 
-def delete_multi(keys: list, shard=_DEFAULT_SHARD):
+def delete_multi(keys: list, shard=_DEFAULT_SHARD, key_prefix=''):
     """ Delete multiple values from the cache. """
 
     pipe = pipeline(shard)
     for key in keys:
-        pipe.delete(key)
+        pipe.delete(key_prefix + key)
     pipe.execute()
 
 def dirty(f, *args, **kwargs):
@@ -139,26 +139,27 @@ def dirty(f, *args, **kwargs):
 
     return delete_multi(keys_to_delete, shard)
 
-def get(key, shard=_DEFAULT_SHARD):
+def get(key, shard=_DEFAULT_SHARD, key_prefix=''):
     """ Get a single value from the cache. """
 
-    result = _client(shard).get(key)
+    result = _client(shard).get(key_prefix + key)
     if not result:
         return result
 
     return pickle.loads(result)
 
-def get_multi(keys: list, shard=_DEFAULT_SHARD):
+def get_multi(keys: list, shard=_DEFAULT_SHARD, key_prefix=''):
     """ Get a value from the cache. """
 
     pipe = pipeline(shard)
     for key in keys:
-        pipe.get(key)
+        pipe.get(key_prefix + key)
 
     result_list = pipe.execute()
     result = {}
     for key, value in zip(keys, result_list):
-        result[key] = pickle.loads(value)
+        if value is not None:
+            result[key] = pickle.loads(value)
 
     return result
 
@@ -167,23 +168,23 @@ def pipeline(shard=_DEFAULT_SHARD):
 
     return _client(shard).pipeline()
 
-def set(key: str, value, shard=_DEFAULT_SHARD, timeout=0):
+def set(key: str, value, shard=_DEFAULT_SHARD, key_prefix='', timeout=0):
     """ Set a new value in the cache. """
 
     pipe = pipeline(shard)
-    pipe.set(key, pickle.dumps(value))
+    pipe.set(key_prefix + key, pickle.dumps(value))
     if timeout:
-        pipe.expire(key, timeout)
+        pipe.expire(key_prefix + key, timeout)
 
     pipe.execute()
 
-def set_multi(mapping: dict, shard=_DEFAULT_SHARD, timeout=0):
+def set_multi(mapping: dict, shard=_DEFAULT_SHARD, key_prefix='', timeout=0):
     """ Set multiple values in the cache. """
 
     pipe = pipeline(shard)
     for key, value in mapping.items():
-        pipe.set(key, pickle.dumps(value))
+        pipe.set(key_prefix + key, pickle.dumps(value))
         if timeout:
-            pipe.expire(key, timeout)
+            pipe.expire(key_prefix + key, timeout)
 
     pipe.execute()

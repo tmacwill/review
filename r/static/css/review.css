@@ -51,6 +51,10 @@
     padding-bottom: 8px;
 }
 
+.files-container .file {
+    margin-bottom: 15px;
+}
+
 .files-container .file .code {
     width: 100%;
     white-space: pre-wrap;
