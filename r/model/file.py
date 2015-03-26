@@ -24,6 +24,7 @@ class TableHTMLFormatter(pygments.formatters.HtmlFormatter):
 
 class File(r.db.DBObject):
     __table__ = 'files'
+    __foreign_key__ = 'file_id'
 
     @classmethod
     def before_set(cls, rows):

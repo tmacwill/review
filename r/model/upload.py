@@ -2,6 +2,7 @@ import r
 
 class Upload(r.db.DBObject):
     __table__ = 'uploads'
+    __foreign_key__ = 'upload_id'
 
     @classmethod
     def before_set(cls, rows):

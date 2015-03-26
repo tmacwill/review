@@ -241,17 +241,39 @@ class DBObject(object):
         return [row['id'] for row in rows]
 
     @classmethod
-    def get_where(cls, options=None, limit=None, offset=None, order=None, one=False, metadata=None):
+    def get_where(cls, options=None, limit=None, offset=None, order=None, one=False, metadata=None, associations=None):
         ids = cls.get_ids(options, limit=limit, offset=offset, order=order)
-        objects = cls.get(ids, one=one, metadata=metadata)
+        cls_data = cls.get(ids, one=one, metadata=metadata)
+
+        if associations is None:
+            associations = []
+        for association_list in associations:
+            # associations are of the form: [DBOBJECT], [DBOBJECT,DBOBJECT], etc
+            # TODO: support fields, so that all data is not returned
+            if len(association_list) == 0:
+                continue
+
+            association = association_list.pop(0)
+
+            association_table = association.__table__
+            foreign_key = cls.__foreign_key__
+
+            for cls_id, cls_item in cls_data.items():
+                setattr(cls_item, association_table, {})
+
+            association_data = association.get_where({foreign_key: ids}, associations=[association_list])
+            for assoc_id, assoc_item in association_data.items():
+                foreign_key_id = getattr(assoc_item, foreign_key)
+                getattr(cls_data[foreign_key_id], association_table)[assoc_id] = assoc_item
+
         if not order:
-            return objects
+            return cls_data
 
         # if we have an order by clause, then IDs will be in sorted order, so return
         # an OrderedDict in order to preserve that ordering
         result = OrderedDict()
         for id in ids:
-            result[id] = objects[id]
+            result[id] = cls_data[id]
 
         return result
 

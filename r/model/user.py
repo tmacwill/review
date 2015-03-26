@@ -5,6 +5,7 @@ import r
 
 class User(r.db.DBObject):
     __table__ = 'users'
+    __foreign_key__ = 'user_id'
 
     @classmethod
     def before_set(cls, rows):
