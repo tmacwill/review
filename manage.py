@@ -38,7 +38,7 @@ def monitor_packages():
 @manager.command
 @manager.option('-h', '--host', help='Host')
 @manager.option('-p', '--port', help='Port')
-def runserver(host='0.0.0.0', port=9000):
+def runserver(host='0.0.0.0', port='9000'):
     """ Run the development server and monitor changes to assets. """
 
     # only start the package monitor the first time we're run
@@ -49,7 +49,7 @@ def runserver(host='0.0.0.0', port=9000):
         r.assets.packages.monitor()
 
     os.environ['REVIEW_SERVER_RUNNING'] = '1'
-    manager.app.run(debug=True, host=host, port=port)
+    manager.app.run(debug=True, host=host, port=int(port))
 
 if __name__ == "__main__":
     manager.run()
