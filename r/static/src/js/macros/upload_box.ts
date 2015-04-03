@@ -1,21 +1,15 @@
+/// <reference path="typeahead" />
+
 declare var $: any;
 declare var nunjucks: any;
 declare var _: any;
 
 module r.macros.upload_box {
-    export function init(container) {
-        $(function() {
-            new UploadBox($(container));
-        });
-    }
-
     export class UploadBox {
         $container: any;
         $tagsContainer: any;
-        $typeahead: any;
         tags: any = {};
-        typeaheadContents: Array<any>;
-        highlightPosition: number = -1;
+        typeahead: any;
 
         templates = {
             'fileRow': nunjucks.compile(`
@@ -36,22 +30,27 @@ module r.macros.upload_box {
 
             'tagInput': nunjucks.compile(`
                 <input type="hidden" name="tags[]" value="{{ id }}" />
-            `),
-
-            'typeaheadRow': nunjucks.compile(`
-                <li><a data-id="{{ id }}" data-name="{{ name }}" href="#">{{ name }}</a></li>
             `)
         };
 
         constructor($container) {
+            var self = this;
             this.$container = $container;
-            this.$typeahead = this.$container.find('#typeahead-list');
             this.$container.find('#upload-form').append(this.templates.fileInput.render());
             this.$container.find('#typeahead').css({'width': this.$container.find('#input-tags').outerWidth() - 20 + 'px'});
             this.$tagsContainer = this.$container.find('#tags-container');
 
+            // initialize typeahead for the tags input
+            this.typeahead = new r.macros.typeahead.Typeahead(
+                this.$container.find('#input-tags'),
+               '/tags/autocomplete',
+               function(row) {
+                   self.typeaheadClicked(row)
+               },
+               false
+            );
+
             this.bind();
-            this.updateTypeahead('');
         }
 
         bind() {
@@ -80,57 +79,6 @@ module r.macros.upload_box {
                 // create a new hidden input that will be triggered next time
                 self.$container.find('.input-file.current-input').removeClass('current-input');
                 self.$container.find('#upload-form').append(self.templates.fileInput.render());
-            });
-
-            // update the typeahead during typing
-            this.$container.find('#input-tags').on('keyup', function(e) {
-                var down = 40;
-                var up = 38;
-                var enter = 13;
-
-                if (e.which == up || e.which == down) {
-                    if (e.which == up) {
-                        self.highlightPosition = Math.max(self.highlightPosition - 1, 0);
-                    }
-                    else if (e.which == down) {
-                        self.highlightPosition = Math.min(self.highlightPosition + 1, self.typeaheadContents.length - 1);
-                    }
-
-                    self.$typeahead.find('li a').removeClass('hover');
-                    self.$typeahead.find('li:nth-child(' + (self.highlightPosition + 1) + ') a').addClass('hover');
-                }
-
-                else if (e.which == enter) {
-                    self.$typeahead.find('li:nth-child(' + (self.highlightPosition + 1) + ') a').trigger('click');
-                }
-
-                else {
-                    self.updateTypeahead($(this).val());
-                }
-            });
-
-            // typeahead highlights
-            this.$typeahead.on('mouseover', 'a', function() {
-                $(this).addClass('hover');
-            });
-            this.$typeahead.on('mouseout', 'a', function() {
-                self.$typeahead.find('a').removeClass('hover');
-            });
-
-            // add tag when typeahead row is clicked
-            this.$typeahead.on('click', 'a', function(e) {
-                // add tag to list
-                var id = $(this).attr('data-id');
-                var name = $(this).attr('data-name');
-                self.tags[id] = {
-                    'id': id,
-                    'name': name
-                };
-
-                self.renderTags();
-                self.$container.find('#input-tags').val('');
-                self.updateTypeahead('');
-                return false;
             });
 
             // remove tag when tag close button is pressed
@@ -167,37 +115,17 @@ module r.macros.upload_box {
             this.$container.find('#tags-input-container').html(inputHtml);
         }
 
-        updateTypeahead(q: string) {
-            var self = this;
-            var $parent = this.$typeahead.parent();
-            if (q == '') {
-                $parent.hide();
-                return;
-            }
+        typeaheadClicked(row: Element) {
+            // add tag to list
+            var id = $(row).attr('data-id');
+            var name = $(row).attr('data-name');
+            this.tags[id] = {
+                'id': id,
+                'name': name
+            };
 
-            // reset highlight position whenever the text changes
-            this.highlightPosition = -1;
-
-            // fire query to tags autocomplete endpoint
-            $.get('/tags/autocomplete', {'q': q}, function(response) {
-                var rows = JSON.parse(response);
-                if (rows.tags.length) {
-                    $parent.show();
-                }
-
-                // render a row for each tag
-                var html = '';
-                for (var i = 0; i < rows.tags.length; i++) {
-                    html += self.templates.typeaheadRow.render({
-                        'id': rows.tags[i].id,
-                        'name': rows.tags[i].name
-                    });
-                }
-
-                // replace the typeahead list with the rendered suggestions
-                self.$typeahead.html(html);
-                self.typeaheadContents = rows.tags;
-            });
+            this.renderTags();
+            this.typeahead.clear();
         }
     }
 }

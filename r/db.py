@@ -2,6 +2,7 @@ import operator
 import pymysql
 import time
 from flask import g
+from collections import OrderedDict
 import r
 from r import app
 
@@ -74,12 +75,12 @@ def get_where(table, options=None, limit=None, offset=None, order=None, one=Fals
         where = where[:-4]
 
     query = "SELECT %s FROM %s %s" % (columns, table, where)
+    if order:
+        query += " ORDER BY %s" % order
     if limit:
         query += " LIMIT %s" % limit
     if offset:
         query += " OFFSET %s" % offset
-    if order:
-        query += " ORDER BY %s" % order
 
     # in dry run mode, return the query instead of executing it right away
     if dry:
@@ -242,7 +243,17 @@ class DBObject(object):
     @classmethod
     def get_where(cls, options=None, limit=None, offset=None, order=None, one=False, metadata=None):
         ids = cls.get_ids(options, limit=limit, offset=offset, order=order)
-        return cls.get(ids, one=one, metadata=metadata)
+        objects = cls.get(ids, one=one, metadata=metadata)
+        if not order:
+            return objects
+
+        # if we have an order by clause, then IDs will be in sorted order, so return
+        # an OrderedDict in order to preserve that ordering
+        result = OrderedDict()
+        for id in ids:
+            result[id] = objects[id]
+
+        return result
 
     @classmethod
     def set(cls, rows):

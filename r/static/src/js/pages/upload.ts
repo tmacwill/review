@@ -1,3 +1,7 @@
 /// <reference path="../macros/upload_box" />
 
-r.macros.upload_box.init('#upload-box');
+declare var $: any;
+
+$(function() {
+    new r.macros.upload_box.UploadBox($('#upload-box'));
+});

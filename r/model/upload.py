@@ -11,9 +11,6 @@ class Upload(r.db.DBObject):
 
         return rows
 
-def get_by_slug(slug: str):
-    return Upload.get_where({'slug': slug}, one=True)
-
 def create_with_files(user_id: str, name: str, description: str, files: list, tags: list) -> str:
     """ Create a new upload with a set of files. """
 
@@ -38,3 +35,13 @@ def create_with_files(user_id: str, name: str, description: str, files: list, ta
     } for tag in tags])
 
     return upload
+
+def get_by_slug(slug: str):
+    """ Get the upload matching the given slug. """
+    return Upload.get_where({'slug': slug}, one=True)
+
+def get_with_tags(tag_ids: list, limit=300) -> list:
+    """ Get uploads with the given tags. """
+
+    tag_uploads = r.model.tag_upload.TagUpload.get_where({'tag_id': tag_ids}, limit=300, order='creation_time DESC')
+    return Upload.get_where({'id': [e.upload_id for e in tag_uploads.values()]}, limit=50, order='creation_time DESC')

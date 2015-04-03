@@ -1,0 +1,52 @@
+h2, h3 {
+    border-bottom: solid 1px #ccc;
+    padding-bottom: 10px;
+}
+
+h3 {
+    font-size: 24px;
+}
+
+.search-box {
+    margin-bottom: 10px;
+}
+
+.tags-box, .requests-box {
+    padding: 20px 30px;
+}
+
+.popular-tags {
+    margin-top: 10px;
+}
+
+.popular-tags ul, .popular-tags li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    font-size: 16px;
+}
+
+.popular-tags a {
+    display: block;
+    padding: 5px;
+}
+
+.popular-tags a:hover {
+    background: #efefef;
+    color: #337ab7;
+}
+
+.input-search {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+}
+
+.tags-container {
+    padding: 5px 5px 0px 5px;
+}
+
+.typeahead {
+    top: 44px;
+}

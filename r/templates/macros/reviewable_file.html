@@ -1,0 +1,17 @@
+{% from "macros/comment_box.html" import comment_box %}
+
+{% macro reviewable_file(file, grouped_comments, users, current_user) %}
+
+<div class="row file" data-file-id="{{ file.id }}">
+    <div id="file-contents" class="file-contents col-md-9 content-area content-area-border">
+        <h3>{{ file.filename }}</h3>
+        {{ file.contents | safe }}
+    </div>
+    <div class="col-md-3" id="comment-container" class="comment-container">
+        {% for comment in grouped_comments.get(file.id, []) %}
+            {{ comment_box(comment.id, users[comment.user_id], comment.line, comment.creation_time, comment.contents, current_user) }}
+        {% endfor %}
+    </div>
+</div>
+
+{% endmacro %}

@@ -99,29 +99,3 @@
     margin-top: 10px;
     margin-bottom: 5px;
 }
-
-.upload-box .typeahead {
-    padding: 5px 0;
-    border: 1px solid;
-    border-color: #e5e5e5 #dbdbdb #d2d2d2;
-    border-radius: 8px;
-    position: absolute;
-    top: 50px;
-    background: white;
-    -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px;
-}
-
-.upload-box .typeahead ul, .upload-box .typeahead ul li {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-.upload-box .typeahead li a {
-    display: block;
-    padding: 5px 15px;
-}
-
-.upload-box .typeahead li a.hover {
-    background: #efefef;
-}

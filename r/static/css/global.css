@@ -29,6 +29,14 @@ h3 {
     font-size: 28px;
 }
 
+.green {
+    color: #167F39;
+}
+
+.link {
+    color: #337ab7;
+}
+
 .content-area {
     background: white;
 }

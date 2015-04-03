@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
-{% from "macros/comment_box.html" import comment_box %}
+{% from "macros/reviewable_file.html" import reviewable_file %}
 
 {% block body %}
 
-<link rel="stylesheet" href="/static/css/review.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/review.css" />
 <script type="text/javascript" src="/static/build/js/review.min.js"></script>
 
 <div class="container-fluid">
@@ -23,17 +23,7 @@
     <div class="files-container">
         <div id="files" class="files">
             {% for file in files %}
-                <div class="row file" data-file-id="{{ file.id }}">
-                    <div id="file-contents" class="file-contents col-md-9 content-area content-area-border">
-                        <h3>{{ file.filename }}</h3>
-                        {{ file.contents | safe }}
-                    </div>
-                    <div class="col-md-3" id="comment-container" class="comment-container">
-                        {% for comment in grouped_comments.get(file.id, []) %}
-                            {{ comment_box(comment.id, users[comment.user_id], comment.line, comment.creation_time, comment.contents, current_user) }}
-                        {% endfor %}
-                    </div>
-                </div>
+                {{ reviewable_file(file, grouped_comments, users, current_user) }}
             {% endfor %}
         </div>
     </div>

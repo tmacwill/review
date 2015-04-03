@@ -18,6 +18,10 @@ def register():
         packager.asset.minified_javascript('static/src/js/lib/moment.min.js')
     ])
 
+    packager.register('js/browse.min.js', [
+        packager.asset.typescript('static/src/js/pages/browse.ts')
+    ])
+
     packager.register('js/review.min.js', [
         packager.asset.typescript('static/src/js/pages/review.ts'),
         packager.asset.template('templates/macros/comment_box.html')

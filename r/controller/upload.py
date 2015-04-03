@@ -4,6 +4,22 @@ from flask import request, redirect
 import r
 from r import app
 
+@app.route('/', methods=['GET'])
+@app.route('/browse', methods=['GET'])
+def browse():
+    tags = {}
+    popular_tags = r.model.tag.popular_tags()
+    query_tags = request.args.get('q')
+    if query_tags:
+        tags = r.model.tag.Tag.get(query_tags.split(','))
+
+    return r.lib.render(
+        'pages/browse.html',
+        popular_tags=popular_tags,
+        tags=tags,
+        tags_json=r.lib.to_json(tags)
+    )
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     user_id = r.model.user.current_user()
