@@ -61,12 +61,26 @@ def get_by_slug(slug: str):
 
 def get_with_tags(tag_ids: list, limit=300) -> list:
     """ Get uploads with the given tags. """
+    if len(tag_ids) == 0:
+        return {}
 
-    tag_uploads = r.model.tag_upload.TagUpload.get_where({'tag_id': tag_ids}, limit=300, order='creation_time DESC')
-    return Upload.get_where({'id': [e.upload_id for e in tag_uploads.values()]}, limit=50, order='creation_time DESC')
+    tag_uploads = r.model.tag_upload.TagUpload.get_where({'tag_id': tag_ids}, limit=limit, order='creation_time DESC', associations=['upload', 'upload.files', 'upload.files.comments', 'upload.user', 'upload.tag_uploads.tag'])
+    return _prepare_upload_stories({tag_upload.upload.id: tag_upload.upload for tag_upload in tag_uploads.values()})
 
 def uploads_for_feed(user_id):
     uploads = r.model.upload.Upload.get_where({'user_id': user_id}, associations=['files', 'files.comments', 'tag_uploads.tag', 'user'], order='creation_time DESC')
+    return _prepare_upload_stories(uploads)
+
+def uploads_for_browse(tag_ids):
+    # if none provided, fetch recents
+    if len(tag_ids) == 0:
+        uploads = r.model.upload.Upload.get_where(associations=['files', 'files.comments', 'tag_uploads.tag', 'user'], order='creation_time DESC', limit=20)
+        return _prepare_upload_stories(uploads)
+
+
+    return r.model.upload.get_with_tags(list(tags.keys()))
+
+def _prepare_upload_stories(uploads):
     # compute comment and line counts for each upload
     for upload in uploads.values():
         comment_count = sum(len(file.comments) for file in upload.files.values())
@@ -74,7 +88,7 @@ def uploads_for_feed(user_id):
 
         line_count = sum(file.line_count for file in upload.files.values())
         upload._line_count = line_count
-
     return uploads
+
 
 
