@@ -28,7 +28,7 @@ class File(r.db.DBObject):
 
     __belongs_to__ = lambda: {
         "upload": {
-            "model": r.model.upload.Uploads,
+            "model": r.model.upload.Upload,
             "foreign_key": "upload_id"
         }
     }

@@ -73,12 +73,15 @@ def profile(username):
     """ User profile page. """
 
     user = r.model.user.get_by_username(username)
-    uploads = r.model.upload.Upload.get_where({'user_id': user.id})
-    comments = r.model.comment.Comment.get_where({'user_id': user.id})
-    files = r.model.file.File.get([e.file_id for e in comments.values()])
+    uploads = r.model.upload.uploads_for_feed(user.id)
 
     upload_count = r.model.upload.Upload.get_count_where({'user_id': user.id})
     comment_count = r.model.comment.Comment.get_count_where({'user_id': user.id})
 
+    # TODO: change to a model function/query, since this won't work
+    # once we paginate
+    file_count = sum(len(upload.files) for upload in uploads.values())
+    line_count = sum(upload._line_count for upload in uploads.values())
+
     return r.lib.render('pages/profile.html', uploads=uploads, upload_count=upload_count, comment_count=comment_count,
-        line_count=123, user=user)
+        line_count=line_count, file_count=file_count, user=user)
