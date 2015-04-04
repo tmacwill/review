@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% from "macros/upload_story.html" import upload_story %}
 {% block body %}
 
 <link rel="stylesheet" type="text/css" href="/static/css/profile.css" />
@@ -20,19 +21,19 @@
                         </tr>
                         <tr>
                             <td>Comments</td>
-                            <td>18</td>
+                            <td>{{ comment_count }}</td>
                         </tr>
                         <tr>
                             <td>Requests</td>
-                            <td>5</td>
+                            <td>{{ upload_count }}</td>
                         </tr>
                         <tr>
                             <td>Files</td>
-                            <td>23</td>
+                            <td>{{ file_count }}</td>
                         </tr>
                         <tr>
                             <td>Lines</td>
-                            <td>1976</td>
+                            <td>{{ line_count }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -48,30 +49,9 @@
                 </a>
             </div>
             <div class="row stories content-area">
-                <div class="story review-story">
-                    <div class="story-header">
-                        <a href="#"><h4>CS50 mario.c</h4></a>
-                        <a href="#" class="upload-tag btn btn-primary">CS50</a>
-                        <a href="#" class="upload-tag btn btn-primary">pset1</a>
-                        <a href="#" class="upload-tag btn btn-primary">mario</a>
-                    </div>
-                    <div class="story-details">
-                        <div class="upload-description">This is my submission for CS50's first problem set. It has a few bugs, but it passes most test cases. When you input negative numbers, though, it crashes :( Anyone know why?</div>
-                        <div class="story-stats">Uploaded by Tommy MacWilliam. 0 Reviews. 5 Files. 432 Lines.</div>
-                    </div>
-                </div>
-                <div class="story review-story">
-                    <div class="story-header">
-                        <a href="#"><h4>CS50 mario.c</h4></a>
-                        <a href="#" class="upload-tag btn btn-primary">CS50</a>
-                        <a href="#" class="upload-tag btn btn-primary">pset1</a>
-                        <a href="#" class="upload-tag btn btn-primary">mario</a>
-                    </div>
-                    <div class="story-details">
-                        <div class="upload-description">This is my submission for CS50's first problem set. It has a few bugs, but it passes most test cases. When you input negative numbers, though, it crashes :( Anyone know why?</div>
-                        <div class="story-stats">Uploaded by Tommy MacWilliam. 0 Reviews. 5 Files. 432 Lines.</div>
-                    </div>
-                </div>
+                {% for upload in uploads.values() %}
+                    {{ upload_story(upload) }}
+                {% endfor %}
             </div>
         </div>
     </div>
