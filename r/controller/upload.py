@@ -1,4 +1,4 @@
-import simplejson
+import urllib.parse
 from flask import request, redirect
 
 import r
@@ -28,13 +28,12 @@ def upload():
 
     else:
         files = []
-        for key in request.files:
-            for f in request.files.getlist(key):
-                if f.filename:
-                    files.append({
-                        'filename': f.filename,
-                        'contents': f.stream.read().decode()
-                    })
+        for file in request.form.getlist('files[]'):
+            data = r.lib.from_json(urllib.parse.unquote(file))
+            files.append({
+                'filename': data['filename'],
+                'contents': data['contents']
+            })
 
         upload = r.model.upload.create_with_files(user_id, request.form['name'], request.form['description'],
             files, request.form.getlist('tags[]'))

@@ -13,6 +13,9 @@ def fail_response(data=None):
     data['success'] = False
     return to_json(data)
 
+def from_json(json: str):
+    return simplejson.loads(json)
+
 def generate_slug(length=12):
     """ Returns a unique slug of the specified length. """
 

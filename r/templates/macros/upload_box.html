@@ -3,8 +3,10 @@
 <h1>Request a Review.</h1>
 <form action="/upload" method="POST" id="upload-form" enctype="multipart/form-data">
     <div id="files-container" class="files-container">
-        <h3>Choose Files to Upload</h3>
+        <h3>Select files to upload.</h3>
+        <h4>Or drag and drop files here.</h4>
         <div id="files-list" class="files-list"></div>
+        <input id="input-file" class="input-file" type="file" multiple />
         <a href="#" id="btn-add-file" class="btn btn-default btn-add-file">Add File</a>
     </div>
     <div class="row">
