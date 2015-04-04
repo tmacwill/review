@@ -14,11 +14,15 @@ def browse():
     if query_tags:
         tags = r.model.tag.Tag.get(query_tags.split(','))
 
+
+    uploads = r.model.upload.uploads_for_browse(list(tags.keys()))
+
     return r.lib.render(
         'pages/browse.html',
         popular_tags=popular_tags,
         tags=tags,
-        tags_json=r.lib.to_json(tags)
+        tags_json=r.lib.to_json(tags),
+        uploads=uploads
     )
 
 @app.route('/upload', methods=['GET', 'POST'])
