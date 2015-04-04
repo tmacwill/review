@@ -4,6 +4,24 @@ class Upload(r.db.DBObject):
     __table__ = 'uploads'
     __foreign_key__ = 'upload_id'
 
+    __has_many__ = lambda: {
+        "files": {
+            "model": r.model.file.File,
+            "foreign_key": "upload_id"
+        },
+        "tag_uploads": {
+            "model": r.model.tag_upload.TagUpload,
+            "foreign_key": "upload_id"
+        }
+    }
+
+    __belongs_to__ = lambda: {
+        "user": {
+            "model": r.model.user.User,
+            "foreign_key": "user_id"
+        }
+    }
+
     @classmethod
     def before_set(cls, rows):
         for row in rows:

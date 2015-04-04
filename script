@@ -1,0 +1,6 @@
+from r import app
+import r
+
+with app.app_context():
+    x=(r.model.user.User.get_where(associations=['comments', 'comments.file']))
+

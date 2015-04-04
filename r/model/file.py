@@ -26,6 +26,19 @@ class File(r.db.DBObject):
     __table__ = 'files'
     __foreign_key__ = 'file_id'
 
+    __belongs_to__ = lambda: {
+        "upload": {
+            "model": r.model.upload.Uploads,
+            "foreign_key": "upload_id"
+        }
+    }
+    __has_many__ = lambda: {
+        "comments": {
+            "model": r.model.comment.Comment,
+            "foreign_key": "user_id"
+        }
+    }
+
     @classmethod
     def before_set(cls, rows):
         for row in rows:

@@ -109,6 +109,9 @@ class DBObject(object):
     __timeout__ = 3600
     __version__ = 0
 
+    __has_many__ = lambda: {}
+    __belongs_to__ = lambda: {}
+
     def __init__(self, fields):
         self.__fields__ = list(fields.keys())
         for k, v in fields.items():
@@ -246,25 +249,44 @@ class DBObject(object):
         cls_data = cls.get(ids, one=one, metadata=metadata)
 
         if associations is None:
-            associations = []
-        for association_list in associations:
-            # associations are of the form: [DBOBJECT], [DBOBJECT,DBOBJECT], etc
+            associations = {}
+        if isinstance(associations, list):
+            associations = _build_associations_dict(associations)
+
+        for k,v in associations.items():
+            """
+            {"user": {"comments": {}},
+             "uploads": {"comments": {}}}
+            """
             # TODO: support fields, so that all data is not returned
-            if len(association_list) == 0:
-                continue
-
-            association = association_list.pop(0)
-
-            association_table = association.__table__
-            foreign_key = cls.__foreign_key__
+            # look up association in __has_many__ and __belongs_to__
+            for assoc_type in [cls.__has_many__, cls.__belongs_to__]:
+                d = assoc_type()
 
             for cls_id, cls_item in cls_data.items():
-                setattr(cls_item, association_table, {})
+                setattr(cls_item, k, {})
 
-            association_data = association.get_where({foreign_key: ids}, associations=[association_list])
-            for assoc_id, assoc_item in association_data.items():
-                foreign_key_id = getattr(assoc_item, foreign_key)
-                getattr(cls_data[foreign_key_id], association_table)[assoc_id] = assoc_item
+            has_many = cls.__has_many__()
+            if k in has_many:
+                association = has_many[k]["model"]
+                foreign_key = has_many[k]["foreign_key"]
+
+                association_data = association.get_where({foreign_key: ids}, associations=v)
+                for assoc_id, assoc_item in association_data.items():
+                    foreign_key_id = getattr(assoc_item, foreign_key)
+                    getattr(cls_data[foreign_key_id], k)[assoc_id] = assoc_item
+
+            belongs_to = cls.__belongs_to__()
+            if k in belongs_to:
+                association = belongs_to[k]["model"]
+                foreign_key = belongs_to[k]["foreign_key"]
+
+                foreign_ids = [getattr(cls_item, foreign_key) for cls_item in cls_data.values()]
+                association_data = association.get_where({'id': foreign_ids}, associations=v)
+
+                for cls_item in cls_data.values():
+                    setattr(cls_item, k, association_data[getattr(cls_item, foreign_key)])
+            # TODO: if neither in has_many or belongs_to, throw an error
 
         if not order:
             return cls_data
@@ -317,3 +339,19 @@ class DBObject(object):
         cls.dirty([row['id'] for row in rows])
 
         return cls.after_set(rows, result)
+
+def _build_associations_dict(associations_list):
+    """
+    Converts, e.g. ["users", "users.comments"] to
+    {
+        "users": {"comments": {}}
+    }
+    """
+    final_result = {}
+    for assoc_str in associations_list:
+        pieces = assoc_str.split('.')
+        result = final_result
+        for piece in pieces:
+            result.setdefault(piece, {})
+            result = result[piece]
+    return final_result
