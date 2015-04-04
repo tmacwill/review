@@ -2,6 +2,14 @@ import r
 
 class Tag(r.db.DBObject):
     __table__ = 'tags'
+    __foreign_key__ = 'tag_id'
+
+    __has_many__ = lambda: {
+        "tag_uploads": {
+            "model": r.model.tag_upload.TagUpload,
+            "foreign_key": "upload_id"
+        }
+    }
 
 def get_by_upload_id(upload_id: str) -> dict:
     tag_uploads = r.model.tag_upload.TagUpload.get_where({'upload_id': upload_id})

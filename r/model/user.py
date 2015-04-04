@@ -5,6 +5,17 @@ import r
 
 class User(r.db.DBObject):
     __table__ = 'users'
+    __foreign_key__ = 'user_id'
+    __has_many__ = lambda: {
+        "comments": {
+            "model": r.model.comment.Comment,
+            "foreign_key": "user_id"
+        },
+        "uploads": {
+            "model": r.model.upload.Upload,
+            "foreign_key": "user_id"
+        }
+    }
 
     @classmethod
     def before_set(cls, rows):
