@@ -78,7 +78,7 @@ def uploads_for_browse(tag_ids):
         return _prepare_upload_stories(uploads)
 
 
-    return r.model.upload.get_with_tags(list(tags.keys()))
+    return r.model.upload.get_with_tags(tag_ids)
 
 def _prepare_upload_stories(uploads):
     # compute comment and line counts for each upload
