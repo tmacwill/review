@@ -1,17 +1,17 @@
 INSERT INTO tags
     (id, name, creation_time)
 VALUES
-    ('f7bf7f5b6dbc4212aa9257713b10c85f', 'Python', 1426901941909),
-    ('37db15e768804083a88e12d0c4a89a80', 'Javascript', 1426901941909),
-    ('8df3e452dce9412b950c3065b0112dbb', 'C', 1426901941909),
-    ('76ee23ada88c4ebfa86b498917e3aa88', 'CS50', 1426901941909),
-    ('25b6dd3008744ee987f2c2c6435b0d6d', 'pset1', 1426901941909)
+    ('0r3duxIXjBR5', 'Python', 1426901941909),
+    ('5LRhUWrm9E47', 'Javascript', 1426901941909),
+    ('68dqGMsHc71B', 'C', 1426901941909),
+    ('MCSrI6vwVsBR', 'CS50', 1426901941909),
+    ('Tqx9pzfcevi5', 'pset1', 1426901941909)
 ;
 
 INSERT INTO tags_uploads
     (id, upload_id, tag_id, creation_time)
 VALUES
-    ('92b77ba3a8e44228a5cf39ce87543219', '111af585a1514404804211a92d1a7f6', '8df3e452dce9412b950c3065b0112dbb', 1426902024702),
-    ('75c9748f30a7464bbec968882b82ef42', '111af585a1514404804211a92d1a7f6', '76ee23ada88c4ebfa86b498917e3aa88', 1426902024702),
-    ('81ae2bef7f1541e1abad1747904f354f', '111af585a1514404804211a92d1a7f6', '25b6dd3008744ee987f2c2c6435b0d6d', 1426902024702)
+    ('NaFUtDCmydcK', 'xl6Itr7qFTQE', '68dqGMsHc71B', 1426902024702),
+    ('1v2M08NcU4mW', 'xl6Itr7qFTQE', 'MCSrI6vwVsBR', 1426902024702),
+    ('iX8TUOZdye3z', 'xl6Itr7qFTQE', 'Tqx9pzfcevi5', 1426902024702)
 ;

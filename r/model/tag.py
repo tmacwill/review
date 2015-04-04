@@ -12,13 +12,13 @@ def popular_tags(limit=10) -> list:
 
     # cheating for now, implement ranking at some point
     result = [{
-        'id': 'f7bf7f5b6dbc4212aa9257713b10c85f',
+        'id': '0r3duxIXjBR5',
         'name': 'Python'
     }, {
-        'id': '37db15e768804083a88e12d0c4a89a80',
+        'id': '5LRhUWrm9E47',
         'name': 'Javascript'
     }, {
-        'id': '8df3e452dce9412b950c3065b0112dbb',
+        'id': '68dqGMsHc71B',
         'name': 'C'
     }]
 

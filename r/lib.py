@@ -1,7 +1,10 @@
 from flask import render_template
+import random
 import simplejson
+import string
 import time
-import uuid
+
+_slug_alphabet = list(string.ascii_lowercase + string.ascii_uppercase + string.digits)
 
 def fail_response(data=None):
     if not data:
@@ -10,10 +13,10 @@ def fail_response(data=None):
     data['success'] = False
     return to_json(data)
 
-def generate_slug():
-    """ Returns a 32-character slug. """
+def generate_slug(length=12):
+    """ Returns a unique slug of the specified length. """
 
-    return uuid.uuid4().hex
+    return ''.join(random.sample(_slug_alphabet, length))
 
 def now():
     """ Get the current time. """

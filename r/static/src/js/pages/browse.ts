@@ -80,12 +80,15 @@ class Browse {
     }
 
     loadTagsFromURL() {
+        var $tags = this.$container.find('#tags-container');
         if (!window.location.search) {
+            $tags.hide();
             return;
         }
 
         var idString = window.location.search.split('=')[1];
         if (!idString) {
+            $tags.hide();
             return;
         }
 

@@ -1,7 +1,7 @@
 CREATE TABLE tags_uploads (
-    id CHAR(64) NOT NULL,
-    tag_id CHAR(64) NOT NULL,
-    upload_id CHAR(64) NOT NULL,
+    id CHAR(12) NOT NULL,
+    tag_id CHAR(12) NOT NULL,
+    upload_id CHAR(12) NOT NULL,
     creation_time BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE InnoDB DEFAULT CHARSET=utf8;

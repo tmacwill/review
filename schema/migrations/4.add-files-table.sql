@@ -1,6 +1,6 @@
 CREATE TABLE files (
-    id CHAR(64) NOT NULL,
-    upload_id CHAR(64) NOT NULL,
+    id CHAR(12) NOT NULL,
+    upload_id CHAR(12) NOT NULL,
     filename VARCHAR(255) NOT NULL,
     contents MEDIUMTEXT,
     line_count INT UNSIGNED NOT NULL,

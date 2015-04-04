@@ -184,7 +184,7 @@ class _Builder(object):
 
             stdout, stderr = process.communicate()
             if process.returncode != 0:
-                print("Packaging error!\n%s" % stdout.decode('utf-8'))
+                print("\nPackaging error!\n%s" % stdout.decode('utf-8'))
 
         else:
             os.system(' '.join(args))
