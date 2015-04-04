@@ -1,14 +1,16 @@
 {% macro upload_story(upload) %}
+
 <div class="story review-story">
     <div class="story-header">
-        <a href="#"><h4>{{ upload.name }}</h4></a>
+        <a href="/review/{{ upload.slug }}"><h4>{{ upload.name }}</h4></a>
         {% for tag_upload in upload.tag_uploads.values() %}
-            <a href="/browse?q={{ tag_upload.tag.id }}" class="upload-tag btn btn-primary">{{ tag_upload.tag.name }}</a>
+            <a href="/browse?q={{ tag_upload.tag.id }}" class="btn-tag">{{ tag_upload.tag.name }}</a>
         {% endfor %}
     </div>
     <div class="story-details">
         <div class="upload-description">{{ upload.description }}</div>
-        <div class="story-stats">Uploaded by {{ upload.user.name }}.
+        <div class="story-stats">
+            Uploaded by <a href="/profile/{{ upload.user.username }}">{{ upload.user.name }}</a>.
             {% trans count=upload._comment_count %}
             {{ count }} Comment.
             {% pluralize %}
@@ -26,8 +28,9 @@
             {% pluralize %}
             {{ count }} Lines.
             {% endtrans %}
-            </div>
+        </div>
     </div>
 </div>
+
 {% endmacro %}
 

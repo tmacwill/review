@@ -30,7 +30,7 @@ class Browse {
         // we may have landed on a page with tags in the URL, so load them
         this.allTags = initialTags;
         this.bind();
-        this.loadTagsFromURL();
+        this.loadTagsFromURL(false);
     }
 
     bind() {
@@ -54,11 +54,11 @@ class Browse {
 
         // when we go back, re-load the tags from the current URL
         window.onpopstate = function(e) {
-            self.loadTagsFromURL();
+            self.loadTagsFromURL(false);
         };
     }
 
-    addTag(id, name) {
+    addTag(id, name, push?) {
         // if tag already exists, then ignore it
         if (_.some(this.tags, function(e) { return e.id == id; })) {
             return;
@@ -76,10 +76,12 @@ class Browse {
             'name': name
         };
 
-        this.pushQueryString();
+        if (push || push === undefined) {
+            this.pushQueryString();
+        }
     }
 
-    loadTagsFromURL() {
+    loadTagsFromURL(push?) {
         var $tags = this.$container.find('#tags-container');
         if (!window.location.search) {
             $tags.hide();
@@ -97,7 +99,7 @@ class Browse {
         this.tags = [];
         for (var i = 0; i < ids.length; i++) {
             var tag = this.allTags[ids[i]];
-            this.addTag(tag.id, tag.name);
+            this.addTag(tag.id, tag.name, push);
         }
 
         this.renderTags();
