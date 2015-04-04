@@ -1,5 +1,4 @@
 body {
-    padding: 20px;
     background: #ecf0f1;
 }
 
@@ -27,6 +26,10 @@ h2 {
 h3 {
     font-weight: 200;
     font-size: 28px;
+}
+
+.main-container {
+    padding: 20px;
 }
 
 .green {
@@ -77,3 +80,36 @@ h3 {
     color: white;
 }
 
+.navbar {
+    background: #167F39;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid;
+    border-color: #e5e5e5 #dbdbdb #d2d2d2;
+    margin-bottom: 0;
+}
+
+.navbar .navbar-brand {
+    font-weight: 100;
+    color: white;
+    font-size: 29px;
+    padding-left: 25px;
+}
+
+.navbar .navbar-brand:hover {
+    color: white;
+}
+
+.navbar .nav a {
+    color: white !important;
+    font-size: 19px;
+    font-weight: 200;
+}
+
+.navbar .nav a:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.navbar .nav .glyphicon {
+    margin-right: 10px;
+}
