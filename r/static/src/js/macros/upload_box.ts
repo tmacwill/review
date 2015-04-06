@@ -100,6 +100,7 @@ module r.macros.upload_box {
                 return false;
             });
 
+            // show visual feedback when a file is dragged over the area
             $fileContainer.on('dragover', function(e) {
                 $(this).addClass('dragover');
                 return false;
@@ -109,6 +110,47 @@ module r.macros.upload_box {
                 $(this).removeClass('dragover');
                 return false;
             });
+
+            // show paste area when paste file is pressed
+            this.$container.on('click', '#btn-paste-file', function(e) {
+                var $container = self.$container.find('#container-paste');
+                if ($container.is(':hidden')) {
+                    self.$container.find('#container-paste textarea, #container-paste input').val('');
+                    $container.show();
+                }
+
+                return false;
+            });
+
+            // create a file from a pasted row
+            this.$container.on('click', '#btn-paste-file-done', function(e) {
+                var filename = self.$container.find('#input-paste-filename').val();
+                var contents = self.$container.find('#textarea-paste').val();
+                if (!filename || !contents) {
+                    return;
+                }
+
+                self.addFile(filename, contents);
+                self.$container.find('#container-paste').hide();
+                return false;
+            });
+
+            // hide paste container
+            this.$container.on('click', '#btn-paste-file-cancel', function(e) {
+                self.$container.find('#container-paste').hide();
+                return false;
+            });
+        }
+
+        addFile(filename: string, contents: string) {
+            if (!filename || !contents) {
+                return;
+            }
+
+            this.$container.find('#files-list').append(this.templates.fileRow.render({
+                'name': filename,
+                'value': encodeURI(JSON.stringify({'filename': filename, 'contents': contents}))
+            }));
         }
 
         handleFile(file: File) {
@@ -117,10 +159,7 @@ module r.macros.upload_box {
             // once the file is read, display a removable row in the form
             var reader = new FileReader();
             reader.onload = function(f) {
-                self.$container.find('#files-list').append(self.templates.fileRow.render({
-                    'name': file.name,
-                    'value': encodeURI(JSON.stringify({'filename': file.name, 'contents': reader.result}))
-                }));
+                self.addFile(file.name, reader.result);
             };
 
             reader.readAsText(file);
