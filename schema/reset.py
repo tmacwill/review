@@ -1,3 +1,4 @@
+import redis
 import os
 
 path = os.path.dirname(os.path.realpath(__file__)) + '/'
@@ -17,3 +18,7 @@ for file in migrations:
 data = os.listdir(data_path)
 for file in data:
     os.system("mysql -uroot review < " + data_path + file)
+
+# clear cache
+connection = redis.StrictRedis(host='localhost', port=6379)
+connection.flushall()

@@ -14,6 +14,3 @@ class Comment(r.db.DBObject):
             "foreign_key": "file_id"
         }
     }
-
-def get_by_file_ids(file_ids: list) -> dict:
-    return r.model.comment.Comment.get_where({'file_id': file_ids})

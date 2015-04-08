@@ -50,7 +50,7 @@ class File(r.db.DBObject):
 def get_highlighted_for_upload(upload_id: str) -> list:
     """ Get highlighted versions of the files for an upload. """
 
-    rows = File.get_where({'upload_id': upload_id})
+    rows = File.get_where({'upload_id': upload_id}, order='filename ASC')
     for row in rows.values():
         row.contents = highlight(row.contents, row.filename)
 

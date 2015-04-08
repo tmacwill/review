@@ -9,4 +9,4 @@ CREATE TABLE files (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- used to get all the files in an upload
-ALTER TABLE files ADD INDEX upload_id (upload_id);
+ALTER TABLE files ADD INDEX upload_id (upload_id, filename);

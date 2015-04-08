@@ -41,6 +41,16 @@ def monitor_packages():
 def runserver(host='0.0.0.0', port='9000'):
     """ Run the development server and monitor changes to assets. """
 
+    # flask doesn't reload nested macros, so manually add them all to the watch list
+    extra_directories = [os.path.dirname(os.path.realpath(__file__)) + '/r/templates/macros/']
+    extra_files = []
+    for extra_directory in extra_directories:
+        for directory, directories, files in os.walk(extra_directory):
+            for filename in files:
+                filename = os.path.join(directory, filename)
+                if os.path.isfile(filename):
+                    extra_files.append(filename)
+
     # only start the package monitor the first time we're run
     if not os.environ.get('REVIEW_SERVER_RUNNING'):
         import r.assets.packages
@@ -49,7 +59,7 @@ def runserver(host='0.0.0.0', port='9000'):
         r.assets.packages.monitor()
 
     os.environ['REVIEW_SERVER_RUNNING'] = '1'
-    manager.app.run(debug=True, host=host, port=int(port))
+    manager.app.run(debug=True, host=host, port=int(port), extra_files=extra_files)
 
 if __name__ == "__main__":
     manager.run()

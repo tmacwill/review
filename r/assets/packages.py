@@ -15,7 +15,8 @@ def register():
         packager.asset.minified_javascript('static/src/js/lib/jquery-1.11.1.min.js'),
         packager.asset.minified_javascript('static/src/js/lib/underscore-min.js'),
         packager.asset.minified_javascript('static/src/js/lib/nunjucks.min.js'),
-        packager.asset.minified_javascript('static/src/js/lib/moment.min.js')
+        packager.asset.minified_javascript('static/src/js/lib/moment.min.js'),
+        packager.asset.minified_javascript('static/src/js/lib/events.min.js'),
     ])
 
     packager.register('js/browse.min.js', [

@@ -1,5 +1,6 @@
 import urllib.parse
 from flask import request, redirect
+from collections import OrderedDict
 
 import r
 from r import app
@@ -48,11 +49,11 @@ def view(slug):
     # get everything associated with this upload
     current_user = r.model.user.current_user()
     files = r.model.file.get_highlighted_for_upload(upload.id)
-    comments = r.model.comment.get_by_file_ids(list(files.keys()))
+    comments = r.model.comment.Comment.get_where({'file_id': list(files.keys())}, order='creation_time ASC')
     users = r.model.user.User.get([comment.user_id for comment in comments.values()] + [upload.user_id, current_user])
     tags = r.model.tag.get_by_upload_id(upload.id)
 
-    grouped_comments = {}
+    grouped_comments = OrderedDict()
     for comment in comments.values():
         grouped_comments.setdefault(comment.file_id, [])
         grouped_comments[comment.file_id].append(comment)

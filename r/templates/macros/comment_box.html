@@ -6,9 +6,10 @@
     {% if current_user and current_user.id == user.id %}
         <a href="#" class="btn-remove">×</a>
     {% endif %}
-    <div id="contents" class="contents" contenteditable>
+    <div id="contents" class="contents" {% if current_user and current_user.id == user.id %} contenteditable {% endif %}>
         {{ contents }}
     </div>
+    <a id="btn-save" class="btn btn-default btn-save hidden" href="#">Save</a>
 </div>
 
 {% endmacro %}

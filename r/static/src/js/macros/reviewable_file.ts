@@ -5,6 +5,7 @@ declare var _: any;
 declare var moment: any;
 declare var nunjucks: any;
 declare var current_user: any;
+declare var events: any;
 
 module r.macros.reviewable_file {
     export class ReviewableFile {
@@ -72,6 +73,23 @@ module r.macros.reviewable_file {
                 var line = parseInt($(this).attr('data-line'), 10);
                 self.$container.find('.comment-box[data-line="' + line + '"]').removeClass('hover');
                 self.$container.find('.code[data-line="' + line + '"]').removeClass('hover');
+            });
+
+            // remove comment
+            events.subscribe('commentRemoved', function(data) {
+                var comment = _.find(self.comments, function(e) { return e.id == data.id });
+                if (!comment) {
+                    return;
+                }
+
+                // if there are no other comments on this line, then remove the highlight
+                var others = _.filter(self.comments, function(e) { return e.line == comment.line });
+                if (others.length == 1) {
+                    $(self.$code[comment.line - 1]).removeClass('highlight');
+                }
+
+                self.comments = _.filter(self.comments, function(e) { return e.id != data.id });
+                self.layout();
             });
         }
 

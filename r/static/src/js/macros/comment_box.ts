@@ -1,5 +1,6 @@
 declare var $: any;
 declare var moment: any;
+declare var events: any;
 
 var DATE_FORMAT: string = 'MMMM Do, h:mma';
 
@@ -29,9 +30,27 @@ module r.macros.comment_box {
         bind() {
             var self = this;
 
-            // save comments on blur
+            // show save button on focus
+            this.$container.on('focus', '#contents', function(e) {
+                self.$container.find('#btn-save').removeClass('hidden');
+            });
+
+            // save comment on blur
             this.$container.on('blur', '#contents', function(e) {
                 self.save();
+                setTimeout(function() {
+                    // if we're no longer focused, then remove the save button
+                    if (!self.focused()) {
+                        self.$container.find('#btn-save').addClass('hidden');
+                    }
+                }, 300);
+            });
+
+            // save comment when save button presseed
+            this.$container.on('click', '#btn-save', function(e) {
+                // since blurring the comment will trigger a save, we don't need to do anything here
+                self.focus();
+                return false;
             });
 
             // remove comment when the x is clicked
@@ -45,15 +64,18 @@ module r.macros.comment_box {
             return this.$container.find('#contents').html();
         }
 
+        focused() {
+            return this.$container.find('#contents').is(':focus');
+        }
+
         remove() {
-            var self = this;
+            this.$container.hide();
+            events.publish('commentRemoved', {'id': this.id});
+
             $.ajax({
                 'url': '/comment/' + this.id,
-                'type': 'delete',
-                'success': function(response) {
-                    self.$container.hide();
-                }
-            })
+                'type': 'delete'
+            });
         }
 
         empty() {
