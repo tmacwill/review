@@ -183,7 +183,11 @@ class DBObject(object):
         r.store.delete_multi([cls._cache_key(id) for id in ids])
 
     @classmethod
-    def get(cls, ids, one=False, metadata=None):
+    def get(cls, ids, metadata=None):
+        return cls.get_by_id(ids, one=isinstance(ids, str), metadata=metadata)
+
+    @classmethod
+    def get_by_id(cls, ids, one=False, metadata=None):
         """ Get rows by ID, fetching and storing uncached values appropriately. """
 
         if not isinstance(ids, list):
@@ -229,7 +233,7 @@ class DBObject(object):
         return result['c']
 
     @classmethod
-    def get_ids(cls, options=None, limit=None, offset=None, order=None, one=False, dry=False):
+    def get_ids_where(cls, options=None, limit=None, offset=None, order=None, one=False, dry=False):
         rows = get_where(
             cls.__table__,
             options=options,
@@ -245,8 +249,8 @@ class DBObject(object):
 
     @classmethod
     def get_where(cls, options=None, limit=None, offset=None, order=None, one=False, metadata=None, associations=None):
-        ids = cls.get_ids(options, limit=limit, offset=offset, order=order)
-        cls_data = cls.get(ids, one=one, metadata=metadata)
+        ids = cls.get_ids_where(options, limit=limit, offset=offset, order=order)
+        cls_data = cls.get_by_id(ids, one=one, metadata=metadata)
 
         if associations is None:
             associations = {}
@@ -254,10 +258,6 @@ class DBObject(object):
             associations = _build_associations_dict(associations)
 
         for k,v in associations.items():
-            """
-            {"user": {"comments": {}},
-             "uploads": {"comments": {}}}
-            """
             # TODO: support fields, so that all data is not returned
             # look up association in __has_many__ and __belongs_to__
             for assoc_type in [cls.__has_many__, cls.__belongs_to__]:
@@ -286,6 +286,7 @@ class DBObject(object):
 
                 for cls_item in cls_data.values():
                     setattr(cls_item, k, association_data[getattr(cls_item, foreign_key)])
+
             # TODO: if neither in has_many or belongs_to, throw an error
 
         if not order:

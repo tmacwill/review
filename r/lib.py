@@ -36,7 +36,7 @@ def render(template_name, **kwargs):
             kwargs['current_user'] = False
             kwargs['current_user_json'] = 'false'
         else:
-            user = r.model.user.User.get(uid, one=True)
+            user = r.model.user.User.get(uid)
             kwargs['current_user'] = user
             kwargs['current_user_json'] = to_json(user)
 

@@ -41,10 +41,10 @@ def with_prefix(prefix: str, limit=10) -> list:
     # this is pretty slow and simple for now. we should instead implement this with
     # an in-memory store or redis
     sql = """
-        SELECT * FROM tags
+        SELECT * FROM {table}
         WHERE name LIKE %s
         LIMIT %s
-    """
+    """.format(table=Tag.__table__)
 
     result = r.db.get(sql, (prefix + '%', limit))
     return [Tag(tag) for tag in result]

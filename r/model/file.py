@@ -32,6 +32,7 @@ class File(r.db.DBObject):
             "foreign_key": "upload_id"
         }
     }
+
     __has_many__ = lambda: {
         "comments": {
             "model": r.model.comment.Comment,

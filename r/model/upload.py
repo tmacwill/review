@@ -55,8 +55,9 @@ def create_with_files(user_id: str, name: str, description: str, files: list, ta
 
     return upload
 
-def get_by_slug(slug: str):
+def get_by_slug(slug: str) -> Upload:
     """ Get the upload matching the given slug. """
+
     return Upload.get_where({'slug': slug}, one=True)
 
 def get_with_tags(tag_ids: list, limit=300) -> list:
@@ -65,7 +66,7 @@ def get_with_tags(tag_ids: list, limit=300) -> list:
     tag_uploads = r.model.tag_upload.TagUpload.get_where({'tag_id': tag_ids}, limit=300, order='creation_time DESC')
     return Upload.get_where({'id': [e.upload_id for e in tag_uploads.values()]}, limit=50, order='creation_time DESC')
 
-def uploads_for_feed(user_id):
+def uploads_for_feed(user_id: str):
     uploads = r.model.upload.Upload.get_where({'user_id': user_id}, associations=['files', 'files.comments', 'tag_uploads.tag', 'user'], order='creation_time DESC')
     # compute comment and line counts for each upload
     for upload in uploads.values():
@@ -76,5 +77,3 @@ def uploads_for_feed(user_id):
         upload._line_count = line_count
 
     return uploads
-
-

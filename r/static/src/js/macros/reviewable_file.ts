@@ -91,6 +91,10 @@ module r.macros.reviewable_file {
                 self.comments = _.filter(self.comments, function(e) { return e.id != data.id });
                 self.layout();
             });
+
+            events.subscribe('layout', function(data) {
+                self.layout();
+            });
         }
 
         layout() {

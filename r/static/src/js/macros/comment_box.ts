@@ -33,6 +33,7 @@ module r.macros.comment_box {
             // show save button on focus
             this.$container.on('focus', '#contents', function(e) {
                 self.$container.find('#btn-save').removeClass('hidden');
+                events.publish('layout');
             });
 
             // save comment on blur
@@ -42,6 +43,7 @@ module r.macros.comment_box {
                     // if we're no longer focused, then remove the save button
                     if (!self.focused()) {
                         self.$container.find('#btn-save').addClass('hidden');
+                        events.publish('layout');
                     }
                 }, 300);
             });
