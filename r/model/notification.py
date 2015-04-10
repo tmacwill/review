@@ -41,3 +41,20 @@ def create_if_new_review(user_id: str, from_user_id: str, upload_id: str):
             'upload_slug': upload.slug,
         })
     })
+
+def get_for_feed(user_id: str):
+    """ Get notifications, along with relevant associations. """
+
+    # get the 100 most recent notifications
+    notifications = r.model.notification.Notification.get_where({
+        'user_id': r.model.user.current_user(),
+    }, limit=100, order='creation_time DESC')
+
+    # get the users who sent those notifications
+    users = r.model.user.User.get([e.from_user_id for e in notifications.values()])
+
+    for notification in notifications.values():
+        notification.metadata = r.lib.from_json(notification.metadata)
+        notification.from_user = users[notification.from_user_id]
+
+    return notifications

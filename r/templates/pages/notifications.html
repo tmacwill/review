@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% from "macros/notifications/new_review.html" import new_review %}
+
+{% block body %}
+
+<link rel="stylesheet" type="text/css" href="/static/css/notifications.css" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 content-area content-area-border">
+            <h1>Notifications</h1>
+            <div class="notifications">
+                {% if notifications|length == 0 %}
+                    <h4>No new notifications.</h4>
+                {% else %}
+                    {% for notification in notifications.values() %}
+                        {{ new_review(notification) }}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

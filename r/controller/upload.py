@@ -41,7 +41,7 @@ def upload():
         return redirect('/review/' + upload['slug'])
 
 @app.route('/review/<slug>')
-def view(slug):
+def review(slug):
     upload = r.model.upload.get_by_slug(slug)
     if upload is None:
         return r.lib.render('error.html', error='Invalid URL')

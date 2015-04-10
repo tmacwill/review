@@ -50,6 +50,7 @@ h3 {
     border-color: #e5e5e5 #dbdbdb #d2d2d2;
     border-radius: 3px;
     -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px;
+    padding: 20px;
 }
 
 .stats-table {

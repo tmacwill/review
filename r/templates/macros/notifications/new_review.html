@@ -1,0 +1,11 @@
+{% macro new_review(notification) %}
+
+<div class="notification {% if notification.is_read == 0 %} unread {% endif %}">
+    <a href="/review/{{ notification.metadata.upload_slug }}?__nid__={{ notification.id }}">
+        <img class="profile-image" src="{{ notification.from_user.photo_url }}" />
+        {{ notification.from_user.name }} reviewed your upload {{ notification.metadata.upload_name }}. <span class="timestamp">{{ notification.creation_time }}</span>
+    </a>
+</div>
+
+{% endmacro %}
+
