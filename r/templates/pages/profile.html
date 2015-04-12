@@ -53,6 +53,11 @@
                     {{ upload_story(upload) }}
                 {% endfor %}
             </div>
+            <div class="row stories content-area">
+                {% for review in reviews.values() %}
+                    {{ upload_story(review) }}
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
