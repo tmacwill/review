@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% from "macros/reviewable_file.html" import reviewable_file %}
+{% from "macros/reviewers_filter.html" import reviewers_filter %}
 
 {% block body %}
 
@@ -16,6 +17,11 @@
                 {% for tag in tags.values() %}
                     <span class="btn-tag">{{ tag.name }}</span>
                 {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div id="reviewers-filter" class="content-area content-area-border filter-header">
+                {{ reviewers_filter(users.values()) }}
             </div>
         </div>
     </div>

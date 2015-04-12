@@ -9,6 +9,7 @@ h3 {
 
 .search-box {
     margin-bottom: 10px;
+    padding: 0 !important;
 }
 
 .tags-box, .uploads-box {

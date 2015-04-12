@@ -1,0 +1,12 @@
+{% macro reviewers_filter(users) %}
+
+<h3 class="green heading-border">Reviewers</h3>
+<div class="filter-users-list">
+    {% for user in users %}
+        <a href="#" class="filter-user-row" data-selected="true" data-user-id="{{ user.id }}">
+            <span class="glyphicon glyphicon-check"></span> {{ user.name }}
+        </a>
+    {% endfor %}
+</div>
+
+{% endmacro %}

@@ -138,3 +138,23 @@
     padding: 3px 8px;
     margin-top: 4px;
 }
+
+.filter-header .filter-users-list {
+    margin-top: 10px;
+    font-size: 17px;
+}
+
+.filter-header .filter-user-row {
+    color: #333;
+    padding: 5px;
+    display: block;
+}
+
+.filter-header .filter-user-row:hover {
+    background: #efefef;
+    color: #333;
+}
+
+.filter-header .glyphicon {
+    margin-right: 5px;
+}

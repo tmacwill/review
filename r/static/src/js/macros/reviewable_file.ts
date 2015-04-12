@@ -33,6 +33,7 @@ module r.macros.reviewable_file {
             }
 
             this.bind();
+            this.subscribe();
             this.layout();
         }
 
@@ -74,27 +75,6 @@ module r.macros.reviewable_file {
                 self.$container.find('.comment-box[data-line="' + line + '"]').removeClass('hover');
                 self.$container.find('.code[data-line="' + line + '"]').removeClass('hover');
             });
-
-            // remove comment
-            events.subscribe('commentRemoved', function(data) {
-                var comment = _.find(self.comments, function(e) { return e.id == data.id });
-                if (!comment) {
-                    return;
-                }
-
-                // if there are no other comments on this line, then remove the highlight
-                var others = _.filter(self.comments, function(e) { return e.line == comment.line });
-                if (others.length == 1) {
-                    $(self.$code[comment.line - 1]).removeClass('highlight');
-                }
-
-                self.comments = _.filter(self.comments, function(e) { return e.id != data.id });
-                self.layout();
-            });
-
-            events.subscribe('layout', function(data) {
-                self.layout();
-            });
         }
 
         layout() {
@@ -123,6 +103,44 @@ module r.macros.reviewable_file {
 
                 $(this.$code[box.comment.line - 1]).addClass('highlight');
             }
+        }
+
+        subscribe() {
+            var self = this;
+
+            // remove comment
+            events.subscribe('commentRemoved', function(data) {
+                var comment = _.find(self.comments, function(e) { return e.id == data.id });
+                if (!comment) {
+                    return;
+                }
+
+                // if there are no other comments on this line, then remove the highlight
+                var others = _.filter(self.comments, function(e) { return e.line == comment.line });
+                if (others.length == 1) {
+                    $(self.$code[comment.line - 1]).removeClass('highlight');
+                }
+
+                self.comments = _.filter(self.comments, function(e) { return e.id != data.id });
+                self.layout();
+            });
+
+            // let other components trigger layouts
+            events.subscribe('layout', function(data) {
+                self.layout();
+            });
+
+            // show comments from a user
+            events.subscribe('showCommentsFromUser', function(data) {
+                self.$container.find('.comment-box[data-user-id="' + data.user_id + '"]').removeClass('hidden');
+                self.layout();
+            });
+
+            // hide comments from a user
+            events.subscribe('hideCommentsFromUser', function(data) {
+                self.$container.find('.comment-box[data-user-id="' + data.user_id + '"]').addClass('hidden');
+                self.layout();
+            });
         }
     }
 }
