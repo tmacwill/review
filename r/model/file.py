@@ -36,7 +36,7 @@ class File(r.db.DBObject):
     __has_many__ = lambda: {
         "comments": {
             "model": r.model.comment.Comment,
-            "foreign_key": "user_id"
+            "foreign_key": "file_id"
         }
     }
 
