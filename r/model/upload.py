@@ -66,14 +66,35 @@ def get_with_tags(tag_ids: list, limit=300) -> list:
     tag_uploads = r.model.tag_upload.TagUpload.get_where({'tag_id': tag_ids}, limit=300, order='creation_time DESC')
     return Upload.get_where({'id': [e.upload_id for e in tag_uploads.values()]}, limit=50, order='creation_time DESC')
 
+def _prepare_upload_for_story(upload):
+    """
+    Modifies an upload in place to include necessary fields for the story box
+    """
+    comment_count = sum(len(file.comments) for file in upload.files.values())
+    upload._comment_count = comment_count
+
+    line_count = sum(file.line_count for file in upload.files.values())
+    upload._line_count = line_count
+    return upload
+
 def uploads_for_feed(user_id: str):
     uploads = r.model.upload.Upload.get_where({'user_id': user_id}, associations=['files', 'files.comments', 'tag_uploads.tag', 'user'], order='creation_time DESC')
     # compute comment and line counts for each upload
     for upload in uploads.values():
-        comment_count = sum(len(file.comments) for file in upload.files.values())
-        upload._comment_count = comment_count
+        _prepare_upload_for_story(upload)
 
-        line_count = sum(file.line_count for file in upload.files.values())
-        upload._line_count = line_count
+    return uploads
+
+def reviews_for_feed(user_id: str):
+    # determine which uploads have a comment by this user
+    comments = r.model.comment.Comment.get_where({'user_id': user_id},
+            associations=['file'])
+    review_upload_ids = set()
+    for comment in comments.values():
+        review_upload_ids.add(comment.file.upload_id)
+    uploads = r.model.upload.Upload.get_where({'id': list(review_upload_ids)}, associations=['files', 'files.comments', 'tag_uploads.tag', 'user'], order='creation_time DESC')
+    # compute comment and line counts for each upload
+    for upload in uploads.values():
+        _prepare_upload_for_story(upload)
 
     return uploads
