@@ -66,7 +66,7 @@ def get_with_tags(tag_ids: list, limit=300) -> list:
     return Upload.get_where({'id': [e.upload_id for e in tag_uploads.values()]}, limit=50, order='creation_time DESC')
 
 def uploads_for_feed(user_id):
-    uploads = r.model.upload.Upload.get_where({'user_id': user_id}, associations=['files', 'files.comments', 'tag_uploads.tag', 'user'], order='creation_time DESC')
+    uploads = r.model.upload.Upload.get_where({'user_id': user_id}, associations=['files', 'files.comments', ('tag_uploads', {'limit': 1}), ('tag_uploads.tag', {'limit': 1}), 'user'], order='creation_time DESC')
     # compute comment and line counts for each upload
     for upload in uploads.values():
         comment_count = sum(len(file.comments) for file in upload.files.values())

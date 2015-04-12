@@ -255,7 +255,7 @@ class DBObject(object):
 
         for k,v in associations.items():
             """
-            {"user": {"comments": {}},
+            {"user": {"options": {"limit": 10}, "associations": {"comments": {}},
              "uploads": {"comments": {}}}
             """
             # TODO: support fields, so that all data is not returned
@@ -271,7 +271,7 @@ class DBObject(object):
                 association = has_many[k]["model"]
                 foreign_key = has_many[k]["foreign_key"]
 
-                association_data = association.get_where({foreign_key: ids}, associations=v)
+                association_data = association.get_where({foreign_key: ids}, associations=v["associations"], **v["options"])
                 for assoc_id, assoc_item in association_data.items():
                     foreign_key_id = getattr(assoc_item, foreign_key)
                     getattr(cls_data[foreign_key_id], k)[assoc_id] = assoc_item
@@ -282,7 +282,7 @@ class DBObject(object):
                 foreign_key = belongs_to[k]["foreign_key"]
 
                 foreign_ids = [getattr(cls_item, foreign_key) for cls_item in cls_data.values()]
-                association_data = association.get_where({'id': foreign_ids}, associations=v)
+                association_data = association.get_where({'id': foreign_ids}, associations=v["associations"], **v["options"])
 
                 for cls_item in cls_data.values():
                     setattr(cls_item, k, association_data[getattr(cls_item, foreign_key)])
@@ -342,16 +342,24 @@ class DBObject(object):
 
 def _build_associations_dict(associations_list):
     """
-    Converts, e.g. ["users", "users.comments"] to
+    Converts, e.g. ["users", ("users.comments", {"limit": 10})] to
     {
-        "users": {"comments": {}}
+        "users": "associations": {"comments": {"options": {"limit": 10}}
     }
     """
     final_result = {}
-    for assoc_str in associations_list:
+    for assoc_str_or_dict in associations_list:
+        if isinstance(assoc_str_or_dict, str):
+            assoc_str = assoc_str_or_dict
+            options = {}
+        else:
+            assoc_str, options = assoc_str_or_dict
+
         pieces = assoc_str.split('.')
         result = final_result
         for piece in pieces:
-            result.setdefault(piece, {})
-            result = result[piece]
+            result.setdefault(piece, {"associations": {}, "options": {}})
+            prev_result = result
+            result = result[piece]["associations"]
+        prev_result[piece]["options"] = options
     return final_result
