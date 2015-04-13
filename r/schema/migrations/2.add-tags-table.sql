@@ -7,3 +7,6 @@ CREATE TABLE tags (
 
 -- used to search tags
 ALTER TABLE tags ADD INDEX name (name);
+
+-- used to iterate over tags
+ALTER TABLE tags ADD INDEX creation_time (creation_time);

@@ -139,6 +139,17 @@ def dirty(f, *args, **kwargs):
 
     return delete_multi(keys_to_delete, shard)
 
+def execute(command, args=None, shard=_DEFAULT_SHARD):
+    """ Execute a command directly on the store backend. """
+
+    if not args:
+        args = tuple()
+
+    if not isinstance(args, tuple):
+        args = (args,)
+
+    return getattr(_client(shard), command)(*args)
+
 def get(key, shard=_DEFAULT_SHARD, key_prefix=''):
     """ Get a single value from the cache. """
 
