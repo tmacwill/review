@@ -23,6 +23,10 @@ def register():
         packager.asset.typescript('static/src/js/pages/browse.ts')
     ])
 
+    packager.register('js/profile.min.js', [
+        packager.asset.typescript('static/src/js/pages/profile.ts')
+    ])
+
     packager.register('js/review.min.js', [
         packager.asset.typescript('static/src/js/pages/review.ts'),
         packager.asset.template('templates/macros/comment_box.html')

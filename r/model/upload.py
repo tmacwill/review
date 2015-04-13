@@ -87,12 +87,18 @@ def uploads_for_feed(user_id: str):
 
 def reviews_for_feed(user_id: str):
     # determine which uploads have a comment by this user
-    comments = r.model.comment.Comment.get_where({'user_id': user_id},
-            associations=['file'])
+    comments = r.model.comment.Comment.get_where({'user_id': user_id}, associations=['file'])
+
     review_upload_ids = set()
     for comment in comments.values():
         review_upload_ids.add(comment.file.upload_id)
-    uploads = r.model.upload.Upload.get_where({'id': list(review_upload_ids)}, associations=['files', 'files.comments', 'tag_uploads.tag', 'user'], order='creation_time DESC')
+
+    uploads = r.model.upload.Upload.get_where(
+        {'id': list(review_upload_ids)},
+        associations=['files', 'files.comments', 'tag_uploads.tag', 'user'],
+        order='creation_time DESC'
+    )
+
     # compute comment and line counts for each upload
     for upload in uploads.values():
         _prepare_upload_for_story(upload)

@@ -1,8 +1,10 @@
 {% extends "layout.html" %}
 {% from "macros/upload_story.html" import upload_story %}
+
 {% block body %}
 
 <link rel="stylesheet" type="text/css" href="/static/css/profile.css" />
+<script type="text/javascript" src="/static/build/js/profile.min.js"></script>
 
 <div class="container-fluid user-profile-page">
     <div class="row">
@@ -39,24 +41,26 @@
                 </table>
             </div>
         </div>
-        <div class="user-stream col-md-9">
-            <div class="btn-group btn-group-justified tabs">
-                <a class="tab btn btn-default selected" href="#">
+        <div id="user-stream" class="user-stream col-md-9">
+            <div id="tabs" class="btn-group btn-group-justified tabs">
+                <a data-tab="reviews" class="tab btn btn-default selected" href="#">
                     <h3>Reviews</h3>
                 </a>
-                <a class="tab btn btn-default" href="#">
+                <a data-tab="uploads" class="tab btn btn-default" href="#">
                     <h3>Uploads</h3>
                 </a>
             </div>
-            <div class="row stories content-area">
-                {% for upload in uploads.values() %}
-                    {{ upload_story(upload) }}
-                {% endfor %}
-            </div>
-            <div class="row stories content-area">
-                {% for review in reviews.values() %}
-                    {{ upload_story(review) }}
-                {% endfor %}
+            <div id="tab-contents">
+                <div class="row stories content-area" data-tab="reviews">
+                    {% for review in reviews.values() %}
+                        {{ upload_story(review) }}
+                    {% endfor %}
+                </div>
+                <div class="row stories content-area" data-tab="uploads">
+                    {% for upload in uploads.values() %}
+                        {{ upload_story(upload) }}
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
