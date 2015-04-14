@@ -14,7 +14,7 @@ def browse():
     if query_tags:
         tags = r.model.tag.Tag.get(query_tags.split(','))
 
-    return r.lib.render(
+    return r.renderer.page(
         'pages/browse.html',
         popular_tags=popular_tags,
         tags=tags,
@@ -25,7 +25,7 @@ def browse():
 def upload():
     user_id = r.model.user.current_user()
     if request.method == 'GET':
-        return r.lib.render('pages/upload.html')
+        return r.renderer.page('pages/upload.html')
 
     else:
         files = []
@@ -44,7 +44,7 @@ def upload():
 def review(slug):
     upload = r.model.upload.get_by_slug(slug)
     if upload is None:
-        return r.lib.render('error.html', error='Invalid URL')
+        return r.renderer.page('error.html', error='Invalid URL')
 
     # get everything associated with this upload
     current_user = r.model.user.current_user()
@@ -58,7 +58,7 @@ def review(slug):
         grouped_comments.setdefault(comment.file_id, [])
         grouped_comments[comment.file_id].append(comment)
 
-    return r.lib.render(
+    return r.renderer.page(
         'pages/review.html',
         upload=upload,
         files=files.values(),

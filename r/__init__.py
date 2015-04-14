@@ -11,6 +11,7 @@ import r.assets
 import r.store
 import r.db
 import r.lib
+import r.renderer
 
 r.store.configure()
 

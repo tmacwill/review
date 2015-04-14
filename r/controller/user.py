@@ -1,4 +1,4 @@
-from flask import render_template, request, session, redirect, url_for
+from flask import request, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import r
 from r import app
@@ -11,18 +11,18 @@ def register():
     if request.method == 'POST':
         # if email or passwords not provided, fail
         if request.form['name'] == '' or request.form['email'] == '' or request.form['password'] == '' or request.form['password2'] == '':
-            return render_template("error.html", error="Please enter an email address and password.")
+            return r.renderer.page("error.html", error="Please enter an email address and password.")
 
         # make sure passwords match
         if request.form['password'] != request.form['password2']:
-            return render_template("error.html", error="Passwords must match.")
+            return r.renderer.page("error.html", error="Passwords must match.")
 
         # else, look for email in db
         user = r.model.user.get_by_email(request.form['email'], filter=False)
 
         # if user is found, fail
         if user is not None:
-            return render_template("error.html", error="Account for %s already exists" % request.form["email"])
+            return r.renderer.page("error.html", error="Account for %s already exists" % request.form["email"])
 
         # add user to users table, and log in
         id = r.model.user.create(request.form['name'], request.form['email'], request.form['password'])
@@ -31,7 +31,7 @@ def register():
 
     # show register form on GET
     else:
-        return r.lib.render('pages/register.html')
+        return r.renderer.page('pages/register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -41,25 +41,25 @@ def login():
     if request.method == 'POST':
         # if email or password not provided, fail
         if request.form['email'] == '' or request.form['password'] == '':
-            return render_template("error.html", error="Please enter an email address and password.")
+            return r.renderer.page("error.html", error="Please enter an email address and password.")
 
         # else, look for email in db
         user = r.model.user.get_by_email(request.form['email'], filter=False)
 
         # if no user found, fail
         if user is None:
-            return render_template("error.html", error="No account for %s found" % request.form["email"])
+            return r.renderer.page("error.html", error="No account for %s found" % request.form["email"])
 
         # check if password correct
         elif check_password_hash(user.password, request.form['password']):
             session['user_id'] = user.id
             return redirect('/')
         else:
-            return render_template("error.html", error="Invalid password.")
+            return r.renderer.page("error.html", error="Invalid password.")
 
     # show login form on GET
     else:
-        return r.lib.render('pages/login.html')
+        return r.renderer.page('pages/login.html')
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -84,5 +84,13 @@ def profile(username):
     file_count = sum(len(upload.files) for upload in uploads.values())
     line_count = sum(upload._line_count for upload in uploads.values())
 
-    return r.lib.render('pages/profile.html', uploads=uploads, reviews=reviews, upload_count=upload_count, comment_count=comment_count,
-        line_count=line_count, file_count=file_count, user=user)
+    return r.renderer.page(
+        'pages/profile.html',
+        uploads=uploads,
+        reviews=reviews,
+        upload_count=upload_count,
+        comment_count=comment_count,
+        line_count=line_count,
+        file_count=file_count,
+        user=user
+    )

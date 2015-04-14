@@ -12,7 +12,7 @@ def create():
         'contents': request.form.get('contents')
     })
 
-    return r.lib.success_response({'id': comment[0]['id']})
+    return r.renderer.success({'id': comment[0]['id']})
 
 @app.route('/comment/<comment_id>', methods=['DELETE'])
 def delete(comment_id):
@@ -21,4 +21,4 @@ def delete(comment_id):
         return r.lib.fail_response()
 
     r.model.comment.Comment.delete(comment_id)
-    return r.lib.success_response()
+    return r.renderer.success()

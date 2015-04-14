@@ -11,7 +11,7 @@ def notifications():
     for notification in existing.values():
         notification.creation_time = arrow.get(r.lib.from_timestamp(notification.creation_time)).humanize()
 
-    return r.lib.render('pages/notifications.html', notifications=existing)
+    return r.renderer.page('pages/notifications.html', notifications=existing)
 
 @app.before_request
 def mark_notification_in_url():

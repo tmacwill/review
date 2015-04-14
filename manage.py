@@ -41,6 +41,9 @@ def monitor_packages():
 def runserver(host='0.0.0.0', port='9000'):
     """ Run the development server and monitor changes to assets. """
 
+    # enable debug mode
+    os.environ['DEBUG'] = '1'
+
     # flask doesn't reload nested macros, so manually add them all to the watch list
     extra_directories = [os.path.dirname(os.path.realpath(__file__)) + '/r/templates/macros/']
     extra_files = []

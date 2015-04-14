@@ -11,6 +11,37 @@ def register():
         app.static_folder + '/build/'
     )
 
+    packager.register('css/lib.min.css', [
+        packager.asset.css('static/src/css/lib/bootstrap.min.css'),
+        packager.asset.css('static/src/css/global.css'),
+    ])
+
+    packager.register('css/browse.min.css', [
+        packager.asset.css('static/src/css/macros/typeahead.css'),
+        packager.asset.css('static/src/css/pages/browse.css'),
+    ])
+
+    packager.register('css/login.min.css', [
+        packager.asset.css('static/src/css/pages/login.css'),
+    ])
+
+    packager.register('css/notifications.min.css', [
+        packager.asset.css('static/src/css/pages/notifications.css'),
+    ])
+
+    packager.register('css/profile.min.css', [
+        packager.asset.css('static/src/css/pages/profile.css'),
+    ])
+
+    packager.register('css/review.min.css', [
+        packager.asset.css('static/src/css/pages/review.css'),
+    ])
+
+    packager.register('css/upload.min.css', [
+        packager.asset.css('static/src/css/macros/typeahead.css'),
+        packager.asset.css('static/src/css/pages/upload.css'),
+    ])
+
     packager.register('js/lib.min.js', [
         packager.asset.minified_javascript('static/src/js/lib/jquery-1.11.1.min.js'),
         packager.asset.minified_javascript('static/src/js/lib/underscore-min.js'),
