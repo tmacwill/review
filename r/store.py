@@ -164,7 +164,8 @@ def get_multi(keys: list, shard=_DEFAULT_SHARD, key_prefix=''):
 
     pipe = pipeline(shard)
     for key in keys:
-        pipe.get(key_prefix + key)
+        if key and isinstance(key, str):
+            pipe.get(key_prefix + key)
 
     result_list = pipe.execute()
     result = {}

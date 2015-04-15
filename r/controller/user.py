@@ -1,5 +1,6 @@
 from flask import request, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
+import urllib.parse
 import r
 from r import app
 
@@ -53,13 +54,19 @@ def login():
         # check if password correct
         elif check_password_hash(user.password, request.form['password']):
             session['user_id'] = user.id
-            return redirect('/')
+            return redirect(request.form.get('next', '/'))
         else:
             return r.renderer.page("error.html", error="Invalid password.")
 
     # show login form on GET
     else:
-        return r.renderer.page('pages/login.html')
+        # parse next field from query string
+        query = urllib.parse.parse_qs(request.query_string)
+        next = query.get(b'next')
+        if next:
+            next = urllib.parse.unquote(next[0].decode('utf-8'))
+
+        return r.renderer.page('pages/login.html', next=next)
 
 @app.route('/logout', methods=['GET'])
 def logout():

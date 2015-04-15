@@ -22,6 +22,7 @@ def browse():
     )
 
 @app.route('/upload', methods=['GET', 'POST'])
+@r.renderer.login_required
 def upload():
     user_id = r.model.user.current_user()
     if request.method == 'GET':
@@ -50,8 +51,13 @@ def review(slug):
     current_user = r.model.user.current_user()
     files = r.model.file.get_highlighted_for_upload(upload.id)
     comments = r.model.comment.Comment.get_where({'file_id': list(files.keys())}, order='creation_time ASC')
-    users = r.model.user.User.get([comment.user_id for comment in comments.values()] + [upload.user_id, current_user])
     tags = r.model.tag.get_by_upload_id(upload.id)
+
+    users_to_get = [upload.user_id]
+    users_to_get.extend([comment.user_id for comment in comments.values()])
+    if current_user:
+        users_to_get.append(current_user)
+    users = r.model.user.User.get(users_to_get)
 
     grouped_comments = OrderedDict()
     for comment in comments.values():

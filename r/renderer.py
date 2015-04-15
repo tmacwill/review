@@ -1,6 +1,10 @@
+from flask import redirect
+from flask import request
 from flask import render_template
 from flask import make_response
 import datetime
+import functools
+import urllib.parse
 import r
 
 def _add_current_user(data):
@@ -24,6 +28,26 @@ def fail(data=None):
 
     data['success'] = False
     return r.lib.to_json(data)
+
+def login_required(f):
+    """ Decorator to enforce the user is logged in. """
+
+    @functools.wraps(f)
+    def inner(*args, **kwargs):
+        redirect_url = '/login'
+        uid = r.model.user.current_user()
+        if not uid:
+            # return a failure json response if this is an ajax request
+            if request.is_xhr:
+                return fail({'login_required': True})
+
+            # redirect to login page for a regular request
+            query = urllib.parse.parse_qs(redirect_url)
+            query['next'] = urllib.parse.quote(request.path + "?%s" % request.query_string.decode('utf-8'))
+            return redirect(redirect_url + "?%s" % urllib.parse.urlencode(query))
+
+        return f(*args, **kwargs)
+    return inner
 
 def page(template_name, **kwargs):
     """ Render a template. """
