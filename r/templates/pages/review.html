@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
+{% from "macros/register_box.html" import register_box %}
 {% from "macros/reviewable_file.html" import reviewable_file %}
 {% from "macros/reviewers_filter.html" import reviewers_filter %}
 
 {% block body %}
 
-<link rel="stylesheet" type="text/css" href="/static/css/review.css" />
+<link rel="stylesheet" type="text/css" href="/static/build/css/review.min.css" />
 <script type="text/javascript" src="/static/build/js/review.min.js"></script>
 
 <div class="container-fluid">
@@ -33,6 +34,10 @@
             {% endfor %}
         </div>
     </div>
+</div>
+
+<div id="register-box" class="register-box-container hidden above-overlay">
+    {{ register_box() }}
 </div>
 
 {% endblock %}

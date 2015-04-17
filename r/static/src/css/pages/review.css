@@ -158,3 +158,12 @@
 .filter-header .glyphicon {
     margin-right: 5px;
 }
+
+.register-box-container {
+    position: absolute;
+    top: 30px;
+    width: 700px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}

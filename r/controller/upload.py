@@ -14,10 +14,9 @@ def browse():
     if query_tags:
         tags = r.model.tag.Tag.get(query_tags.split(','))
 
-
     uploads = r.model.upload.uploads_for_browse(list(tags.keys()))
 
-    return r.lib.render(
+    return r.renderer.page(
         'pages/browse.html',
         popular_tags=popular_tags,
         tags=tags,
@@ -26,10 +25,11 @@ def browse():
     )
 
 @app.route('/upload', methods=['GET', 'POST'])
+@r.renderer.login_required
 def upload():
     user_id = r.model.user.current_user()
     if request.method == 'GET':
-        return r.lib.render('pages/upload.html')
+        return r.renderer.page('pages/upload.html')
 
     else:
         files = []
@@ -48,21 +48,28 @@ def upload():
 def review(slug):
     upload = r.model.upload.get_by_slug(slug)
     if upload is None:
-        return r.lib.render('error.html', error='Invalid URL')
+        return r.renderer.page('error.html', error='Invalid URL')
 
     # get everything associated with this upload
     current_user = r.model.user.current_user()
     files = r.model.file.get_highlighted_for_upload(upload.id)
     comments = r.model.comment.Comment.get_where({'file_id': list(files.keys())}, order='creation_time ASC')
-    users = r.model.user.User.get([comment.user_id for comment in comments.values()] + [upload.user_id, current_user])
     tags = r.model.tag.get_by_upload_id(upload.id)
 
+    # get users who have commented on the upload
+    users_to_get = [upload.user_id]
+    users_to_get.extend([comment.user_id for comment in comments.values()])
+    if current_user:
+        users_to_get.append(current_user)
+    users = r.model.user.User.get(users_to_get)
+
+    # group comments by file
     grouped_comments = OrderedDict()
     for comment in comments.values():
         grouped_comments.setdefault(comment.file_id, [])
         grouped_comments[comment.file_id].append(comment)
 
-    return r.lib.render(
+    return r.renderer.page(
         'pages/review.html',
         upload=upload,
         files=files.values(),

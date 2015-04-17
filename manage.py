@@ -41,6 +41,9 @@ def monitor_packages():
 def runserver(host='0.0.0.0', port='9000'):
     """ Run the development server and monitor changes to assets. """
 
+    # enable debug mode
+    os.environ['DEBUG'] = '1'
+
     # flask doesn't reload nested macros, so manually add them all to the watch list
     extra_directories = [os.path.dirname(os.path.realpath(__file__)) + '/r/templates/macros/']
     extra_files = []
@@ -60,6 +63,13 @@ def runserver(host='0.0.0.0', port='9000'):
 
     os.environ['REVIEW_SERVER_RUNNING'] = '1'
     manager.app.run(debug=True, host=host, port=int(port), extra_files=extra_files)
+
+@manager.command
+def sync_store():
+    """ Sync data from the database to the store. """
+
+    import r
+    r.model.tag.sync_to_store()
 
 if __name__ == "__main__":
     manager.run()

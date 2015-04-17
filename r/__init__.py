@@ -1,5 +1,6 @@
 from flask import Flask
 from flask.ext.babel import Babel
+from werkzeug.contrib.fixers import ProxyFix
 
 app = Flask(__name__)
 babel = Babel(app)
@@ -11,6 +12,7 @@ import r.assets
 import r.store
 import r.db
 import r.lib
+import r.renderer
 
 r.store.configure()
 
@@ -18,3 +20,5 @@ import r.controller
 import r.model
 
 import r.test
+
+app.wsgi_app = ProxyFix(app.wsgi_app)

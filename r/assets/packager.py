@@ -37,6 +37,7 @@ class Packager(object):
         self.last_modified = {}
         self.asset = AssetFactory(self.source)
         self.builders = {
+            'css': CSSBuilder(),
             'minified_javascript': MinifiedJavascriptBuilder(),
             'template': TemplateBuilder(),
             'typescript': TypeScriptBuilder()
@@ -49,7 +50,7 @@ class Packager(object):
         # map the asset type to a builder and write output to a temporary file
         output = tempfile.mktemp()
         builder = self.builders[asset.asset_type]
-        builder.build(asset, output)
+        builder.build(asset.path, output)
         return output
 
     def _concatenate(self, files: list, output: str):
@@ -154,12 +155,21 @@ class Packager(object):
         self.packages[package_name] = package
         return package
 
+    def register_multi(self, packages: dict):
+        """ Register a dictionary of packages. """
+
+        for package_name, assets in packages.items():
+            self.register(package_name, assets)
+
 class AssetFactory(object):
     def __init__(self, source):
         self.source = source
 
     def _asset(self, asset_type, path):
         return Asset(asset_type=asset_type, path=path)
+
+    def css(self, path):
+        return self._asset(asset_type='css', path=self.source + path)
 
     def minified_javascript(self, path):
         return self._asset(asset_type='minified_javascript', path=self.source + path)
@@ -192,21 +202,46 @@ class _Builder(object):
     def build(self, asset, output):
         raise NotImplementedError()
 
+class CSSBuilder(_Builder):
+    def build(self, asset, output):
+        self.run(['yui-compressor', '--type', 'css', '-o', output, asset])
+
 class MinifiedJavascriptBuilder(_Builder):
     def build(self, asset, output):
-        self.run(['cat', asset.path, '>', output], capture=False)
+        self.run(['cat', asset, '>', output], capture=False)
 
 class TemplateBuilder(_Builder):
     def build(self, asset, output):
         # each template contains macro and endmacro tags, so strip those before precompiling
-        with open(asset.path, 'r') as read:
-            tmp = tempfile.mktemp()
-            with open(tmp, 'w') as write:
+        with open(asset, 'r') as read:
+            stripped = tempfile.mktemp()
+            with open(stripped, 'w') as write:
                 write.writelines(read.readlines()[1:-1])
 
-            self.run(['nunjucks-precompile', '--name', os.path.basename(asset.path), tmp, '>', output], capture=False)
+            # compile nunjucks to a temporary file
+            tmp = tempfile.mktemp()
+            self.run(['nunjucks-precompile', '--name', os.path.basename(asset), stripped, '>', tmp], capture=False)
+
+            # compress in debug mode
+            if os.environ.get('DEBUG'):
+                self.run(['cat', tmp, '>', output], capture=False)
+            else:
+                self.run(['yui-compressor', '--type', 'js', '-o', output, tmp])
+
+            # delete temporary files
+            os.unlink(stripped)
             os.unlink(tmp)
 
 class TypeScriptBuilder(_Builder):
     def build(self, asset, output):
-        self.run(['tsc', '--out', output, asset.path])
+        # compile typescript to a temporary file
+        tmp = tempfile.mktemp()
+        self.run(['tsc', '--out', tmp, asset])
+
+        # compress temporary file to output
+        if os.environ.get('DEBUG'):
+            self.run(['cat', tmp, '>', output], capture=False)
+        else:
+            self.run(['yui-compressor', '--type', 'js', '-o', output, tmp])
+
+        os.unlink(tmp)

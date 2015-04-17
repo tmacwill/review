@@ -13,4 +13,4 @@ CREATE TABLE notifications (
 ALTER TABLE notifications ADD INDEX user_id (user_id, creation_time);
 
 -- used to query notifications between users
-ALTER TABLE notifications ADD INDEX user_id (user_id, from_user_id, notification_type, creation_time);
+ALTER TABLE notifications ADD INDEX user_id_from_user_id (user_id, from_user_id, notification_type, creation_time);
