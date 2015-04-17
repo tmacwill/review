@@ -12,7 +12,7 @@ class TableHTMLFormatter(pygments.formatters.HtmlFormatter):
         line_number = 1
         for i, t in source:
             line = '<tr>'
-            line += '<td class="line-number"><a href="#" data-line="%s">%s</a></td>' % (line_number, line_number)
+            line += '<td class="line-number" data-line="%s"><a href="#">%s</a></td>' % (line_number, line_number)
             line += '<td class="code" data-line="%s">%s</td>' % (line_number, t)
             line += '</tr>'
             yield i, line

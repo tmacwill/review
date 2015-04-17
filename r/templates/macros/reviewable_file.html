@@ -4,6 +4,7 @@
 
 <div class="row file" data-file-id="{{ file.id }}">
     <div id="file-contents" class="file-contents col-md-9 content-area content-area-border">
+        <a id="btn-add-comment" href="#" class="btn-add-comment hidden"><span class="glyphicon glyphicon-plus-sign"></span></a>
         <h3>{{ file.filename }}</h3>
         {{ file.contents | safe }}
     </div>

@@ -39,18 +39,38 @@ module r.macros.reviewable_file {
 
         bind() {
             var self = this;
+
+            // add a comment when a line number is clicked
             var $contents = $(this.$container.find('#file-contents'));
-            $contents.on('click', '.line-number a', function(e) {
+            $contents.on('click', '.line-number, #btn-add-comment', function(e) {
                 self.addComment(parseInt($(this).attr('data-line'), 10));
                 return false;
             });
 
+            // move the add comment button to the currently-hovered line
+            this.$container.on('mouseover', '.line-number, .code', function(e) {
+                var line = $(this).attr('data-line');
+                var $line = self.$container.find('.line-number[data-line="' + line + '"]');
+                if (!$line) {
+                    return;
+                }
+
+                var $icon = self.$container.find('#btn-add-comment');
+                var top = $line.position().top - 3;
+                var left = $line.position().left + $line.width() + 10;
+                $icon.css({'top': top + 'px', 'left': left + 'px'});
+                $icon.removeClass('hidden');
+                $icon.attr('data-line', line);
+            });
+
+            // highlight code and comment box on hover
             this.$container.on('mouseover', '.comment-box, .code', function(e) {
                 var line = $(this).attr('data-line');
                 self.$container.find('.comment-box[data-line="' + line + '"]').addClass('hover');
                 self.$container.find('.code[data-line="' + line + '"]').addClass('hover');
             });
 
+            // un-highlight code and comment box
             this.$container.on('mouseout', '.comment-box, .code', function(e) {
                 var line = parseInt($(this).attr('data-line'), 10);
                 self.$container.find('.comment-box[data-line="' + line + '"]').removeClass('hover');
