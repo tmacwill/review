@@ -53,12 +53,14 @@ def review(slug):
     comments = r.model.comment.Comment.get_where({'file_id': list(files.keys())}, order='creation_time ASC')
     tags = r.model.tag.get_by_upload_id(upload.id)
 
+    # get users who have commented on the upload
     users_to_get = [upload.user_id]
     users_to_get.extend([comment.user_id for comment in comments.values()])
     if current_user:
         users_to_get.append(current_user)
     users = r.model.user.User.get(users_to_get)
 
+    # group comments by file
     grouped_comments = OrderedDict()
     for comment in comments.values():
         grouped_comments.setdefault(comment.file_id, [])

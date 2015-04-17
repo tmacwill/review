@@ -41,26 +41,7 @@ module r.macros.reviewable_file {
             var self = this;
             var $contents = $(this.$container.find('#file-contents'));
             $contents.on('click', '.line-number a', function(e) {
-                // determine which line was clicked
-                var line = parseInt($(this).attr('data-line'), 10);
-
-                // render a new comment box (because we're creating the comment, we know that
-                // the current user and author user are the same)
-                var $comment = $(nunjucks.render('comment_box.html', {
-                    'contents': '',
-                    'current_user': current_user,
-                    'line': line,
-                    'timestamp': moment(),
-                    'user': current_user
-                }));
-
-                // render the comment box
-                self.$commentContainer.append($comment);
-                var box = new r.macros.comment_box.CommentBox($comment, self.fileId);
-                self.comments.push(box);
-                self.layout();
-                box.focus();
-
+                self.addComment(parseInt($(this).attr('data-line'), 10));
                 return false;
             });
 
@@ -75,6 +56,34 @@ module r.macros.reviewable_file {
                 self.$container.find('.comment-box[data-line="' + line + '"]').removeClass('hover');
                 self.$container.find('.code[data-line="' + line + '"]').removeClass('hover');
             });
+        }
+
+        addComment(line: number) {
+            // if user is logged out, then show the login box
+            if (!current_user) {
+                var $overlay = $('#overlay');
+                var $register = $('#register-box');
+                $overlay.removeClass('hidden');
+                $register.removeClass('hidden');
+                return;
+            }
+
+            // render a new comment box (because we're creating the comment, we know that
+            // the current user and author user are the same)
+            var $comment = $(nunjucks.render('comment_box.html', {
+                'contents': '',
+                'current_user': current_user,
+                'line': line,
+                'timestamp': moment(),
+                'user': current_user
+            }));
+
+            // render the comment box
+            this.$commentContainer.append($comment);
+            var box = new r.macros.comment_box.CommentBox($comment, this.fileId);
+            this.comments.push(box);
+            this.layout();
+            box.focus();
         }
 
         layout() {

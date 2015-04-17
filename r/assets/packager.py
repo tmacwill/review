@@ -155,6 +155,12 @@ class Packager(object):
         self.packages[package_name] = package
         return package
 
+    def register_multi(self, packages: dict):
+        """ Register a dictionary of packages. """
+
+        for package_name, assets in packages.items():
+            self.register(package_name, assets)
+
 class AssetFactory(object):
     def __init__(self, source):
         self.source = source

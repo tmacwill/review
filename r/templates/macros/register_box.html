@@ -1,0 +1,18 @@
+{% macro register_box() -%}
+
+<div class="content-area content-area-border login-box">
+    <h1>Let's Review.</h1>
+    <form action="/register" method="POST" id="register-form">
+        <input id="name" type="text" name="name" placeholder="Name" />
+        <input id="username" type="text" name="username" placeholder="Username" />
+        <input id="email" type="email" name="email" placeholder="Email" />
+        <input id="password" type="password" name="password" placeholder="Password" />
+        <input id="password2" type="password" name="password2" placeholder="Confirm password" />
+        <a class="btn btn-primary btn-submit" id="btn-register">Register</a>
+    </form>
+    <div class="secondary">
+        Already have an account? <a href="/login">Log in.</a>
+    </div>
+</div>
+
+{%- endmacro %}

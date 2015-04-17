@@ -12,6 +12,8 @@
         window.current_user = {{ current_user_json|safe }};
         </script>
 
+        <div id="overlay" class="overlay hidden"></div>
+
         {% if not hide_navbar %}
             <nav class="navbar navbar-default navbar-fixed-top">
                 <div class="container-fluid">
