@@ -16,6 +16,10 @@ def css():
             packager.asset.css('static/src/css/pages/browse.css')
         ],
 
+        'css/error.min.css': [
+            packager.asset.css('static/src/css/pages/error.css')
+        ],
+
         'css/login.min.css': [
             packager.asset.css('static/src/css/macros/login_box.css'),
             packager.asset.css('static/src/css/pages/login.css')

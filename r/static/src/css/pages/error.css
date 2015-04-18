@@ -1,0 +1,13 @@
+h1, h3 {
+    margin: 0 auto;
+    text-align: center;
+}
+
+h3 {
+    margin-top: 25px;
+}
+
+.error-box {
+    margin-top: 70px;
+    padding: 50px 40px !important;
+}

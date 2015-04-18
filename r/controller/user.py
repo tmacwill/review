@@ -80,6 +80,9 @@ def profile(username):
     """ User profile page. """
 
     user = r.model.user.get_by_username(username)
+    if not user:
+        return r.renderer.error(404)
+
     uploads = r.model.upload.uploads_for_feed(user.id)
     reviews = r.model.upload.reviews_for_feed(user.id)
 

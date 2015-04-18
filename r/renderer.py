@@ -9,16 +9,21 @@ import r
 
 def _add_current_user(data):
     if not 'current_user_json' in data:
-        uid = r.model.user.current_user()
-        if not uid:
+        user_id = r.model.user.current_user()
+        if not user_id:
             data['current_user'] = False
             data['current_user_json'] = 'false'
         else:
-            user = r.model.user.User.get(uid)
+            user = r.model.user.User.get(user_id)
             data['current_user'] = user
             data['current_user_json'] = r.lib.to_json(user)
 
     return data
+
+def error(status_code=404, **kwargs):
+    """ Return an error page according to the status code. """
+
+    return page('pages/errors/%s.html' % status_code, status_code=status_code, **kwargs)
 
 def fail(data=None):
     """ API failure response. """
@@ -35,8 +40,8 @@ def login_required(f):
     @functools.wraps(f)
     def inner(*args, **kwargs):
         redirect_url = '/login'
-        uid = r.model.user.current_user()
-        if not uid:
+        user_id = r.model.user.current_user()
+        if not user_id:
             # return a failure json response if this is an ajax request
             if request.is_xhr:
                 return fail({'login_required': True})
@@ -49,7 +54,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return inner
 
-def page(template_name, **kwargs):
+def page(template_name, status_code=None, **kwargs):
     """ Render a template. """
 
     _add_current_user(kwargs)
@@ -60,6 +65,10 @@ def page(template_name, **kwargs):
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '-1'
+
+    if status_code:
+        response.status_code = status_code
+
     return response
 
 def success(data=None):

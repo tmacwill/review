@@ -48,7 +48,7 @@ def upload():
 def review(slug):
     upload = r.model.upload.get_by_slug(slug)
     if upload is None:
-        return r.renderer.page('error.html', error='Invalid URL')
+        return r.renderer.error(404)
 
     # get everything associated with this upload
     current_user = r.model.user.current_user()

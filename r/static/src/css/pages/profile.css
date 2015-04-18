@@ -28,8 +28,12 @@
 .profile-box .stats {
     font-size: 20px;
     margin: 17px auto 0 auto;
-    width: 70%;
+    width: 60%;
     font-weight: 200;
+}
+
+.profile-box .stats td {
+    padding-bottom: 2px;
 }
 
 .profile-box .stats td:last-child {
