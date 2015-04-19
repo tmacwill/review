@@ -30,7 +30,13 @@
                                     <a href="/upload"><span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>Upload</a>
                                 </li>
                                 <li>
-                                    <a href="/notifications"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>Notifications</a>
+                                    <a href="/notifications">
+                                        <span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>
+                                        Notifications
+                                        {% if notifications_badge %}
+                                            <div class="navbar-badge notifications-badge">{{ notifications_badge }}</div>
+                                        {% endif %}
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="/profile/{{ current_user.username }}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Profile</a>

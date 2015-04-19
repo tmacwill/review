@@ -7,6 +7,13 @@ import functools
 import urllib.parse
 import r
 
+def _add_badge_counts(data):
+    user_id = r.model.user.current_user()
+    if not user_id:
+        return
+
+    data['notifications_badge'] = r.model.notification.get_unread_count_for_user(user_id)
+
 def _add_current_user(data):
     if not 'current_user_json' in data:
         user_id = r.model.user.current_user()
@@ -58,9 +65,10 @@ def page(template_name, status_code=None, **kwargs):
     """ Render a template. """
 
     _add_current_user(kwargs)
+    _add_badge_counts(kwargs)
+    response = make_response(render_template(template_name, **kwargs))
 
     # disable caching
-    response = make_response(render_template(template_name, **kwargs))
     response.headers['Last-Modified'] = datetime.datetime.now()
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
     response.headers['Pragma'] = 'no-cache'

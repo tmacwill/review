@@ -1,3 +1,4 @@
+import builtins
 import operator
 import pymysql
 import time
@@ -16,6 +17,17 @@ def _connect_db():
     """ Connects to the specific database. """
     conn = pymysql.connect(database=DATABASE, user=USER, autocommit=True)
     return conn
+
+def _filter_fields(fields):
+    """ Filter out invalid field names. """
+
+    exclude = builtins.set(['__created__'])
+    return [e for e in fields if e not in exclude]
+
+def _filter_values(row):
+    """ Filter out invalid values. """
+
+    return {k: v for k, v in row.items() if k in _filter_fields(row.keys())}
 
 def _get_db():
     """
@@ -113,7 +125,7 @@ class DBObject(object):
     __belongs_to__ = lambda: {}
 
     def __init__(self, fields):
-        self.__fields__ = list(fields.keys())
+        self.__fields__ = _filter_fields(fields.keys())
         for k, v in fields.items():
             setattr(self, k, v)
 
@@ -192,6 +204,9 @@ class DBObject(object):
 
         if not isinstance(ids, list):
             ids = [ids]
+
+        if len(ids) == 0:
+            return None if one else {}
 
         ids = cls.before_get(ids, metadata=metadata)
 
@@ -312,13 +327,14 @@ class DBObject(object):
             if not row.get('id'):
                 row['id'] = _generate_id()
                 row['creation_time'] = r.lib.now()
+                row['__created__'] = True
 
         # each row may specify different columns, so group by unique fields
         grouped = {}
         for row in rows:
-            k = tuple(sorted(row.keys()))
+            k = tuple(sorted(_filter_fields(row.keys())))
             grouped.setdefault(k, [])
-            grouped[k].append(row)
+            grouped[k].append(_filter_values(row))
 
         # we need a separate query for each distinct group of columns
         result = None

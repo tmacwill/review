@@ -41,13 +41,17 @@ def _cache_key(f, sorted_parameters=None, prefix='', version=0):
     """
 
     sorted_parameters = sorted_parameters or []
-    key = prefix + ':' + str(version) + ':' + _path_for_function(f)
+    key = ''
+    if prefix:
+        key += prefix + ':'
+
+    key += str(version) + ':' + _path_for_function(f)
     for k, v in sorted_parameters:
         key += ':' + base64.b64encode(bytes(str(v), 'utf-8')).decode('utf-8')
 
     return key
 
-def cached(timeout=0, version=0, shard=_DEFAULT_SHARD, wildcard=None):
+def cached(timeout=3600, version=0, shard=_DEFAULT_SHARD, wildcard=None):
     """ Caching decorator. """
 
     def decorator(f):

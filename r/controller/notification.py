@@ -20,7 +20,9 @@ def mark_notification_in_url():
         return
 
     # mark notification as read
+    notification = r.model.notification.Notification.get(notification_id)
     r.model.notification.Notification.set({
         'id': notification_id,
+        'user_id': notification.user_id,
         'is_read': 1
     })

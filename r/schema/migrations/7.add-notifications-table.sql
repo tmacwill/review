@@ -12,5 +12,8 @@ CREATE TABLE notifications (
 -- used to get notifications for a user
 ALTER TABLE notifications ADD INDEX user_id (user_id, creation_time);
 
+-- used to get unread notification count
+ALTER TABLE notifications ADD INDEX user_id_is_read (user_id, is_read);
+
 -- used to query notifications between users
 ALTER TABLE notifications ADD INDEX user_id_from_user_id (user_id, from_user_id, notification_type, creation_time);
