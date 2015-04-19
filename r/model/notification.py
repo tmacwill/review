@@ -46,6 +46,7 @@ def create_if_new_review(user_id: str, from_user_id: str, upload_id: str):
 
     # create the notification
     upload = r.model.upload.Upload.get(upload_id)
+    users = r.model.user.User.get([user_id, from_user_id], metadata={'filter': False})
     Notification.set({
         'user_id': user_id,
         'from_user_id': from_user_id,
@@ -56,6 +57,13 @@ def create_if_new_review(user_id: str, from_user_id: str, upload_id: str):
             'upload_slug': upload.slug,
         })
     })
+
+    r.email.send(
+        subject='New Review!',
+        recipients=[users[user_id].email],
+        plaintext="%s reviewed your upload %s! Visit http://letsreview.io/review/%s to read your review." % (users[from_user_id].name, upload.name, upload.slug),
+        html="%s reviewed your upload %s! <a href='http://letsreview.io/review/%s' target='_blank'>Click here</a> to read your review." % (users[from_user_id].name, upload.name, upload.slug)
+    )
 
 @r.store.cached()
 def get_unread_count_for_user(user_id: str):

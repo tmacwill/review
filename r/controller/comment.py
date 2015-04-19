@@ -20,7 +20,7 @@ def create():
 def delete(comment_id):
     comment = r.model.comment.Comment.get(comment_id)
     if not comment or comment.user_id != r.model.user.current_user():
-        return r.lib.fail_response()
+        return r.renderer.fail()
 
     r.model.comment.Comment.delete(comment_id)
     return r.renderer.success()

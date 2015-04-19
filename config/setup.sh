@@ -5,7 +5,7 @@
 
 # install necessary packages
 apt-get update
-apt-get install -y git nginx python3 pip3 nodejs-legacy npm supervisor yui-compressor
+apt-get install -y git nginx python3 pip3 mailutils nodejs-legacy npm supervisor yui-compressor
 npm install -g typescript nunjucks
 pip3 install -r requirements.txt
 
