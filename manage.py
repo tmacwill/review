@@ -34,6 +34,33 @@ def monitor_packages():
     build_packages()
     r.assets.packages.monitor(block=True)
 
+@manager.command
+def reset():
+    """ Reset the schema. """
+
+    import r
+
+    path = os.path.dirname(os.path.realpath(__file__)) + '/r/schema'
+    migrations_path = path + '/migrations/'
+    data_path = path + '/data/'
+
+    # start with a fresh database
+    os.system("mysql -uroot -e 'drop database review' >/dev/null 2>&1")
+    os.system("mysql -uroot -e 'create database review'")
+
+    # run all migrations in order
+    migrations = [i for i in sorted(os.listdir(migrations_path), key=lambda e: int(e.split('.')[0]))]
+    for file in migrations:
+        os.system("mysql -uroot review < " + migrations_path + file)
+
+    # populate data
+    data = os.listdir(data_path)
+    for file in data:
+        os.system("mysql -uroot review < " + data_path + file)
+
+    r.store._flush_I_KNOW_WHAT_IM_DOING()
+    sync_store()
+
 @flask_failsafe.failsafe
 @manager.command
 @manager.option('-h', '--host', help='Host')

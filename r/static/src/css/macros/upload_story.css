@@ -1,0 +1,30 @@
+.upload-story {
+    border-bottom: 1px solid #ccc;
+    padding: 20px;
+}
+
+.upload-story:last-child {
+    border-bottom: none;
+}
+
+.upload-story .story-header h4 {
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 13px;
+    font-size: 24px;
+}
+
+.upload-story .story-header .btn-tag {
+    vertical-align: 3px;
+}
+
+.upload-story .upload-description {
+    font-size: 15px;
+    margin-bottom: 9px;
+}
+
+.upload-story .story-stats {
+    font-style: italic;
+    color: #999;
+    font-size: 13px;
+}

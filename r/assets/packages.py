@@ -13,6 +13,7 @@ def css():
 
         'css/browse.min.css': [
             packager.asset.css('static/src/css/macros/typeahead.css'),
+            packager.asset.css('static/src/css/macros/upload_story.css'),
             packager.asset.css('static/src/css/pages/browse.css')
         ],
 
@@ -30,6 +31,7 @@ def css():
         ],
 
         'css/profile.min.css': [
+            packager.asset.css('static/src/css/macros/upload_story.css'),
             packager.asset.css('static/src/css/pages/profile.css')
         ],
 
@@ -55,6 +57,7 @@ def js():
         ],
 
         'js/browse.min.js': [
+            packager.asset.template('templates/macros/upload_story.html'),
             packager.asset.typescript('static/src/js/pages/browse.ts')
         ],
 

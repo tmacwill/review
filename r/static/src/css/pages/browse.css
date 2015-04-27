@@ -46,8 +46,13 @@ h3 {
 
 .tags-container {
     padding: 5px 5px 0px 5px;
+    min-height: 40px;
 }
 
 .typeahead {
     top: 44px;
+}
+
+.upload-story:first-child {
+    padding-top: 10px;
 }

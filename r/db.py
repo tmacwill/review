@@ -125,13 +125,20 @@ class DBObject(object):
     __belongs_to__ = lambda: {}
 
     def __init__(self, fields):
+        self.__initial_fields__ = _filter_fields(fields.keys())
         self.__fields__ = _filter_fields(fields.keys())
         for k, v in fields.items():
             setattr(self, k, v)
 
+    def __setattr__(self, name, value):
+        if hasattr(self, '__fields__'):
+            self.__fields__.append(name)
+
+        object.__setattr__(self, name, value)
+
     def __repr__(self):
         result = super(DBObject, self).__repr__()
-        result += ' (' + ', '.join([i + '=' + str(getattr(self, i)) for i in self.__fields__ if hasattr(self, i)]) + ')'
+        result += ' (' + ', '.join([i + '=' + str(getattr(self, i)) for i in self.__initial_fields__ if hasattr(self, i)]) + ')'
         return result
 
     def __to_json__(self):
@@ -265,6 +272,9 @@ class DBObject(object):
     @classmethod
     def get_where(cls, options=None, limit=None, offset=None, order=None, one=False, metadata=None, associations=None):
         ids = cls.get_ids_where(options, limit=limit, offset=offset, order=order)
+        if not ids:
+            return None if one else {}
+
         cls_data = cls.get_by_id(ids, one=one, metadata=metadata)
 
         if associations is None:

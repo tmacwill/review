@@ -6,4 +6,4 @@ from r import app
 def autocomplete():
     prefix = request.args.get('q', '')
     tags = r.model.tag.with_prefix(prefix)
-    return r.renderer.success({'results': tags})
+    return r.renderer.success(results=tags)

@@ -79,9 +79,10 @@ def page(template_name, status_code=None, **kwargs):
 
     return response
 
-def success(data=None):
+def success(**kwargs):
     """ API success response. """
 
+    data = kwargs
     if not data:
         data = {}
 

@@ -39,7 +39,7 @@ class Browse {
         // when a sidebar tag is clicked, add it to the filter
         this.$container.on('click', '#popular-tags a', function(e) {
             self.addTag($(this).attr('data-id'), $(this).attr('data-name'));
-            self.renderTags();
+            self.refresh();
             return false;
         });
 
@@ -48,7 +48,7 @@ class Browse {
             // get the id of the tag and remove it
             var id = $(this).parent('[data-id]').attr('data-id');
             self.removeTag(id);
-            self.renderTags();
+            self.refresh();
             return false;
         });
 
@@ -81,16 +81,29 @@ class Browse {
         }
     }
 
+    loadStories() {
+        var self = this;
+        $.get(window.location.pathname + window.location.search, function(response) {
+            var data = JSON.parse(response);
+            var html = '';
+            for (var i = 0; i < data.uploads.length; i++) {
+                html += nunjucks.render('upload_story.html', {
+                    'upload': data.uploads[i]
+                });
+            }
+
+            self.$container.find('#uploads-list').html(html);
+        });
+    }
+
     loadTagsFromURL(push?) {
         var $tags = this.$container.find('#tags-container');
         if (!window.location.search) {
-            $tags.hide();
             return;
         }
 
         var idString = window.location.search.split('=')[1];
         if (!idString) {
-            $tags.hide();
             return;
         }
 
@@ -102,18 +115,30 @@ class Browse {
             this.addTag(tag.id, tag.name, push);
         }
 
-        this.renderTags();
+        if (push) {
+            this.refresh();
+        }
     }
 
     pushQueryString() {
         // render the current tag list in the URL
-        var query = '?q=' + _.map(this.tags, function(e) { return e.id; }).join(',');
-        window.history.pushState(null, '', window.location.pathname + query);
+        var tags = _.map(this.tags, function(e) { return e.id; });
+        var path = window.location.pathname;
+        if (tags.length) {
+            path += '?q=' + tags.join(',');
+        }
+
+        window.history.pushState(null, '', path);
     }
 
     removeTag(id) {
         this.tags = _.filter(this.tags, function(e) { return e.id != id });
         this.pushQueryString();
+    }
+
+    refresh() {
+        this.loadStories();
+        this.renderTags();
     }
 
     renderTags() {
@@ -126,20 +151,14 @@ class Browse {
             });
         }
 
-        // hide the tags container if there aren't any tags, else we'll see unnecessary padding
+        // hide the tags container if there aren't any tags
         var $tags = this.$container.find('#tags-container');
-        if (!html) {
-            $tags.hide();
-            return;
-        }
-
-        $tags.show();
         $tags.html(html);
     }
 
     typeaheadClicked(row: Element) {
         this.addTag($(row).attr('data-id'), $(row).attr('data-name'));
-        this.renderTags();
+        this.refresh();
         this.typeahead.clear();
     }
 }

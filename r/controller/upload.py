@@ -9,13 +9,18 @@ from r import app
 @app.route('/browse', methods=['GET'])
 def browse():
     tags = {}
-    popular_tags = r.model.tag.popular_tags()
     query_tags = request.args.get('q')
     if query_tags:
         tags = r.model.tag.Tag.get(query_tags.split(','))
 
     uploads = r.model.upload.uploads_for_browse(list(tags.keys()))
 
+    if request.is_xhr:
+        return r.renderer.success(
+            uploads=list(uploads.values())
+        )
+
+    popular_tags = r.model.tag.popular_tags()
     return r.renderer.page(
         'pages/browse.html',
         popular_tags=popular_tags,

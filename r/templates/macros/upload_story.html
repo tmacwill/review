@@ -1,9 +1,9 @@
 {% macro upload_story(upload) %}
 
-<div class="story review-story">
+<div class="upload-story">
     <div class="story-header">
         <a href="/review/{{ upload.slug }}"><h4>{{ upload.name }}</h4></a>
-        {% for tag_upload in upload.tag_uploads.values() %}
+        {% for tag_upload in upload.tag_uploads %}
             <a href="/browse?q={{ tag_upload.tag.id }}" class="btn-tag">{{ tag_upload.tag.name }}</a>
         {% endfor %}
     </div>
@@ -11,26 +11,11 @@
         <div class="upload-description">{{ upload.description }}</div>
         <div class="story-stats">
             Uploaded by <a href="/profile/{{ upload.user.username }}">{{ upload.user.name }}</a>.
-            {% trans count=upload._comment_count %}
-            {{ count }} Comment.
-            {% pluralize %}
-            {{ count }} Comments.
-            {% endtrans %}
-
-            {% trans count=upload.files|length %}
-            {{ count }} File.
-            {% pluralize %}
-            {{ count }} Files.
-            {% endtrans %}
-
-            {% trans count=upload._line_count %}
-            {{ count }} Line.
-            {% pluralize %}
-            {{ count }} Lines.
-            {% endtrans %}
+            {{ upload._comment_count }} {% if upload._comment_count == 1 %} Comment {% else %} Comments {% endif %}.
+            {{ upload.files|length }} {% if upload.files|length == 1 %} File {% else %} Files {% endif %}.
+            {{ upload._line_count }} {% if upload._line_count == 1 %} Line {% else %} Lines {% endif %}.
         </div>
     </div>
 </div>
 
 {% endmacro %}
-

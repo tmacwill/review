@@ -1,5 +1,5 @@
 import flask.ext.mail
-from flask import g
+from flask import g, app
 import r
 
 def send(subject: str, recipients: list, plaintext: str, html: str):
@@ -10,6 +10,11 @@ def send(subject: str, recipients: list, plaintext: str, html: str):
         body=plaintext,
         html=layout % html
     )
+
+    # just print emails in debug mode
+    if app.debug:
+        print(plaintext)
+        return
 
     r.mailer.send(message)
 
