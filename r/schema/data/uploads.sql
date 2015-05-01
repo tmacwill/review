@@ -1,7 +1,7 @@
 INSERT INTO uploads
-    (id, user_id, name, slug, description, creation_time)
+    (id, user_id, name, slug, reviewed, description, creation_time)
 VALUES
-    ('xl6Itr7qFTQE', 'PRuDJ4WFGZrp', 'pset1', 'zJVhWaApxrC5', 'This is my submission for CS50\'s first problem set. It has a few bugs, but it passes most test cases. When you input negative numbers, though, it crashes :( Anyone know why?', 1407385222975)
+    ('xl6Itr7qFTQE', 'PRuDJ4WFGZrp', 'pset1', 'zJVhWaApxrC5', 1, 'This is my submission for CS50\'s first problem set. It has a few bugs, but it passes most test cases. When you input negative numbers, though, it crashes :( Anyone know why?', 1407385222975)
 ;
 
 INSERT INTO files

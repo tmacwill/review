@@ -15,12 +15,19 @@ class Comment(r.db.DBObject):
     }
 
     @classmethod
-    def before_set(cls, rows):
+    def after_set(cls, rows):
         for row in rows:
-            # a comment might be the first on an upload, in which case we need a notification
-            if not row.get('id') and row.get('user_id') and row.get('file_id'):
+            if row.get('__created__'):
+                # mark upload as reviewed
                 file = r.model.file.File.get(row['file_id'])
                 upload = r.model.upload.Upload.get(file.upload_id)
+                if not upload.reviewed:
+                    r.model.upload.Upload.set({
+                        'id': upload.id,
+                        'reviewed': 1
+                    })
+
+                # create a new notification if this is the first review
                 r.model.notification.create_if_new_review(
                     user_id=upload.user_id,
                     from_user_id=row['user_id'],

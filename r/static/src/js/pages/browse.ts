@@ -7,6 +7,7 @@ class Browse {
     $container: any;
     typeahead: any;
     tags: Array<any> = [];
+    filter: string;
     allTags: any = {};
 
     templates = {
@@ -48,6 +49,14 @@ class Browse {
             // get the id of the tag and remove it
             var id = $(this).parent('[data-id]').attr('data-id');
             self.removeTag(id);
+            self.refresh();
+            return false;
+        });
+
+        // reload stories when filters are changed
+        this.$container.on('click', '#filter-container a', function(e) {
+            self.filter = $(this).attr('data-filter');
+            self.pushQueryString();
             self.refresh();
             return false;
         });
@@ -126,6 +135,9 @@ class Browse {
         var path = window.location.pathname;
         if (tags.length) {
             path += '?q=' + tags.join(',');
+        }
+        if (this.filter) {
+            path += (tags.length == 0 ? '?' : '&') + 'filter=' + this.filter;
         }
 
         window.history.pushState(null, '', path);

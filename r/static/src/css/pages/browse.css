@@ -37,11 +37,19 @@ h3 {
     color: #337ab7;
 }
 
+.search-container {
+    border-bottom: 1px solid #ddd;
+}
+
 .input-search {
-    width: 100%;
     padding: 10px;
     border: none;
-    border-bottom: 1px solid #ddd;
+    width: calc(100% - 147px);
+    vertical-align: -1px;
+}
+
+.input-search, .filter-container {
+    display: inline-block;
 }
 
 .tags-container {

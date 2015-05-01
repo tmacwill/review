@@ -10,10 +10,11 @@ from r import app
 def browse():
     tags = {}
     query_tags = request.args.get('q')
+    filter = request.args.get('filter', 'all')
     if query_tags:
         tags = r.model.tag.Tag.get(query_tags.split(','))
 
-    uploads = r.model.upload.uploads_for_browse(list(tags.keys()))
+    uploads = r.model.upload.get_with_tags(list(tags.keys()), filter=filter)
 
     if request.is_xhr:
         return r.renderer.success(

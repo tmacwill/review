@@ -283,7 +283,6 @@ class DBObject(object):
             associations = _build_associations_dict(associations)
 
         for k,v in associations.items():
-            # TODO: support fields, so that all data is not returned
             # look up association in __has_many__ and __belongs_to__
             for assoc_type in [cls.__has_many__, cls.__belongs_to__]:
                 d = assoc_type()
@@ -311,8 +310,6 @@ class DBObject(object):
 
                 for cls_item in cls_data.values():
                     setattr(cls_item, k, association_data[getattr(cls_item, foreign_key)])
-
-            # TODO: if neither in has_many or belongs_to, throw an error
 
         if not order:
             return cls_data

@@ -41,6 +41,7 @@ def _prepare_upload_for_story(upload):
 
     # dict_values aren't JSON encodable
     upload.tag_uploads = list(upload.tag_uploads.values())
+    upload.files = list(upload.files.values())
 
     return upload
 
@@ -81,31 +82,9 @@ def get_by_slug(slug: str) -> Upload:
 
     return Upload.get_where({'slug': slug}, one=True)
 
-def get_with_tags(tag_ids: list, limit=300) -> list:
-    """ Get uploads with the given tags. """
+def get_reviews_by_user(user_id: str):
+    """ Get the reviews completed by a single user. """
 
-    if len(tag_ids) == 0:
-        return {}
-
-    tag_uploads = r.model.tag_upload.TagUpload.get_where(
-        {'tag_id': tag_ids},
-        limit=limit,
-        order='creation_time DESC',
-        associations=['upload', 'upload.files', 'upload.files.comments', 'upload.user', 'upload.tag_uploads.tag']
-    )
-
-    return _prepare_upload_stories({tag_upload.upload.id: tag_upload.upload for tag_upload in tag_uploads.values()})
-
-def uploads_for_feed(user_id: str):
-    uploads = r.model.upload.Upload.get_where(
-        {'user_id': user_id},
-        associations=['files', 'files.comments', 'tag_uploads.tag', 'user'],
-        order='creation_time DESC'
-    )
-
-    return _prepare_upload_stories(uploads)
-
-def reviews_for_feed(user_id: str):
     # determine which uploads have a comment by this user
     comments = r.model.comment.Comment.get_where({'user_id': user_id}, associations=['file'])
 
@@ -121,15 +100,53 @@ def reviews_for_feed(user_id: str):
 
     return _prepare_upload_stories(uploads)
 
-def uploads_for_browse(tag_ids: list):
-    # if none provided, fetch recents
+def get_uploads_by_user(user_id: str):
+    """ Get the uploads submitted by a single user. """
+
+    uploads = r.model.upload.Upload.get_where(
+        {'user_id': user_id},
+        associations=['files', 'files.comments', 'tag_uploads.tag', 'user'],
+        order='creation_time DESC'
+    )
+
+    return _prepare_upload_stories(uploads)
+
+def get_with_tags(tag_ids: list, filter='all', page_size=40, limit=300) -> list:
+    """ Get uploads with the given tags. """
+
+    # if no tags provided, fetch recents
     if not tag_ids:
+        # filter by only unreviewed uploads
+        data = {}
+        if filter == 'unreviewed':
+            data['reviewed'] = 0
+
         uploads = r.model.upload.Upload.get_where(
+            data,
             associations=['files', 'files.comments', 'tag_uploads.tag', 'user'],
             order='creation_time DESC',
-            limit=20
+            limit=page_size
         )
 
         return _prepare_upload_stories(uploads)
 
-    return r.model.upload.get_with_tags(tag_ids)
+    tag_uploads = r.model.tag_upload.TagUpload.get_where(
+        {'tag_id': tag_ids},
+        limit=limit,
+        order='creation_time DESC',
+        associations=['upload', 'upload.files', 'upload.files.comments', 'upload.user', 'upload.tag_uploads.tag']
+    )
+
+    result = {}
+    n = 0
+    for tag_upload in tag_uploads.values():
+        # only return the specified page size
+        if n == page_size:
+            break
+
+        # either we want all uploads or this is unreviewed, so add to result set
+        if filter == 'all' or tag_upload.upload.reviewed == 0:
+            result[tag_upload.upload.id] = tag_upload.upload
+            n += 1
+
+    return _prepare_upload_stories(result)

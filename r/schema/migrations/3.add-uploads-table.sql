@@ -3,6 +3,7 @@ CREATE TABLE uploads (
     user_id CHAR(12) NOT NULL,
     name VARCHAR(255) NOT NULL,
     slug CHAR(12) NOT NULL,
+    reviewed TINYINT NOT NULL DEFAULT 0,
     description TEXT NOT NULL,
     creation_time BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY(id)

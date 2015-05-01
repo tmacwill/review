@@ -83,14 +83,12 @@ def profile(username):
     if not user:
         return r.renderer.error(404)
 
-    uploads = r.model.upload.uploads_for_feed(user.id)
-    reviews = r.model.upload.reviews_for_feed(user.id)
+    uploads = r.model.upload.get_uploads_by_user(user.id)
+    reviews = r.model.upload.get_reviews_by_user(user.id)
 
     upload_count = r.model.upload.Upload.get_count_where({'user_id': user.id})
     comment_count = r.model.comment.Comment.get_count_where({'user_id': user.id})
 
-    # TODO: change to a model function/query, since this won't work
-    # once we paginate
     file_count = sum(len(upload.files) for upload in uploads.values())
     line_count = sum(upload._line_count for upload in uploads.values())
 

@@ -11,9 +11,9 @@
         <div class="upload-description">{{ upload.description }}</div>
         <div class="story-stats">
             Uploaded by <a href="/profile/{{ upload.user.username }}">{{ upload.user.name }}</a>.
-            {{ upload._comment_count }} {% if upload._comment_count == 1 %} Comment {% else %} Comments {% endif %}.
-            {{ upload.files|length }} {% if upload.files|length == 1 %} File {% else %} Files {% endif %}.
-            {{ upload._line_count }} {% if upload._line_count == 1 %} Line {% else %} Lines {% endif %}.
+            {{ upload._comment_count }} {% if upload._comment_count == 1 %} Comment. {% else %} Comments. {% endif %}
+            {{ upload.files|length }} {% if upload.files|length == 1 %} File. {% else %} Files. {% endif %}
+            {{ upload._line_count }} {% if upload._line_count == 1 %} Line. {% else %} Lines. {% endif %}
         </div>
     </div>
 </div>
